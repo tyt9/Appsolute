@@ -6,33 +6,23 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class Dept {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
     private Long deptNo;
 
     @Column(length = 20, nullable = false)
-    private String deptName;
+    private String DeptName;
 
     @Column(length = 30, nullable = false)
-    private String deptLoc;
+        private String DeptLoc;
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private int deptBranch;
+        private int DeptBranch;
 
-    public void changeDeptName(String deptName){
-        this.deptName = deptName;
-    }
-    public void changeDeptLoc(String deptLoc){
-        this.deptLoc = deptLoc;
-    }
 
-    public void changeDeptBranch(int deptBranch) {this.deptBranch = deptBranch;}
 };
