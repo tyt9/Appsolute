@@ -13,23 +13,43 @@ public class ApprovalContentDetail {
     private long documentNum;
 
     @Column(length = 50)
-    private String data1;
+    private String key1;
     @Column(length = 50)
-    private String data2;
+    private String value1;
     @Column(length = 50)
-    private String data3;
+    private String key2;
     @Column(length = 50)
-    private String data4;
+    private String value2;
     @Column(length = 50)
-    private String data5;
+    private String key3;
     @Column(length = 50)
-    private String data6;
+    private String value3;
     @Column(length = 50)
-    private String data7;
+    private String key4;
     @Column(length = 50)
-    private String data8;
+    private String value4;
     @Column(length = 50)
-    private String data9;
+    private String key5;
     @Column(length = 50)
-    private String data10;
+    private String value5;
+    @Column(length = 50)
+    private String key6;
+    @Column(length = 50)
+    private String value6;
+    @Column(length = 50)
+    private String key7;
+    @Column(length = 50)
+    private String value7;
+    @Column(length = 50)
+    private String key8;
+    @Column(length = 50)
+    private String value8;
+    @Column(length = 50)
+    private String key9;
+    @Column(length = 50)
+    private String value9;
+    @Column(length = 50)
+    private String key10;
+    @Column(length = 50)
+    private String value10;
 }

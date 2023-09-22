@@ -14,4 +14,7 @@ public class DocumentDetail {
 
     @Column(nullable = false)
     private int sequence;
+
+    @Column
+    private int format;
 }
