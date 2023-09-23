@@ -1,10 +1,17 @@
 package com.solution.appsolute.entity;
 
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApprovalLine {
 
     @Id

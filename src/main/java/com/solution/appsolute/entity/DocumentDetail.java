@@ -1,8 +1,16 @@
 package com.solution.appsolute.entity;
 
+import lombok.*;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DocumentDetail {
 
     @Id

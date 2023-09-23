@@ -6,12 +6,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@ToString
 @Getter
 @Setter
+@ToString
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Mail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

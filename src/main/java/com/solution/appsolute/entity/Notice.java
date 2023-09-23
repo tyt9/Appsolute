@@ -10,9 +10,9 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name="notice")
 public class Notice {
 

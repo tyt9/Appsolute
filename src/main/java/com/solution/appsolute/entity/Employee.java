@@ -1,18 +1,17 @@
 package com.solution.appsolute.entity;
 
 import lombok.*;
-import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
-@ToString
 @Getter
 @Setter
+@ToString
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +33,7 @@ public class Employee {
     private String empPassword;
 
     @Column(nullable = true)
-    private LocalDateTime empHireDate;
+    private Date empHireDate;
 
     @Column(length = 20, nullable = false)
     private String empPosition;

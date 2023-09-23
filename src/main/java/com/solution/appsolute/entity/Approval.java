@@ -1,14 +1,16 @@
 package com.solution.appsolute.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -40,6 +42,7 @@ public class Approval {
 
     @Column(columnDefinition = "int default 0")
     private int appDel;
+
 
 
 

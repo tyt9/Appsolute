@@ -6,7 +6,12 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 
 @Entity
-
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Dept {
 
     @Id
@@ -15,14 +20,14 @@ public class Dept {
     private Long deptNo;
 
     @Column(length = 20, nullable = false)
-    private String DeptName;
+    private String deptName;
 
     @Column(length = 30, nullable = false)
-        private String DeptLoc;
+        private String deptLoc;
 
     @Column(nullable = false)
     @ColumnDefault("0")
-        private int DeptBranch;
+        private int deptBranch;
 
 
 };

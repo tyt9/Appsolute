@@ -1,7 +1,6 @@
 package com.solution.appsolute.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -10,6 +9,10 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApprovalDetail {
 
     @Column

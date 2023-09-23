@@ -6,7 +6,12 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 
 @Entity
-
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApprovalLineDetail {
 
     @Id
@@ -18,15 +23,8 @@ public class ApprovalLineDetail {
     private int LineNum;
 
     @Column(nullable = false)
-        private int EmpCheckNum;
+    private int EmpCheckNum;
     @Column(nullable = false)
-           private int LineDetailSeq;
-
-    @Column(nullable = false)
-    private Long ApprovalLine;
-
-    @Column(nullable = false)
-    private Long Employee;
-
+    private int LineDetailSeq;
 
 };
