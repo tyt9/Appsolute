@@ -108,3 +108,48 @@ CREATE TABLE DOCUMENT(
     DOCUMENTNAME VARCHAR(100) NOT NULL
 );
 
+INSERT INTO DEPT (DEPTNO, DEPTNAME, DEPTLOC, DEPTBRANCH)
+VALUES
+  (1, 'HR Department', 'New York', 0),
+  (2, 'Sales Department', 'Los Angeles', 0),
+  (3, 'Finance Department', 'Chicago', 0);
+
+INSERT INTO EMPLOYEE (EMPNUM, EMPNAME, DEPTNO, EMPPHONE, EMPEMAIL, EMPPASSWORD, EMPHIREDATE, EMPPOSITION, EMPLEADER, EMPMGR)
+VALUES
+  (1, 'John Doe', 1, '555-123-4567', 'john@example.com', 'password123', '2023-01-15', 'Manager', 0, NULL),
+  (2, 'Alice Smith', 2, '555-987-6543', 'alice@example.com', 'password456', '2023-02-20', 'Sales Associate', 1, 1),
+  (3, 'Bob Johnson', 1, '555-789-0123', 'bob@example.com', 'password789', '2023-03-10', 'HR Specialist', 0, 1);
+
+INSERT INTO APPROVAL (EMPNUM, APPCONTENT, APPTITLE, APPCHECK, LINENUM, DOCUMENTNUM, APPDEL)
+VALUES
+  (1, 'Approval content 1', 'Title 1', 0, 1, 1, 0),
+  (2, 'Approval content 2', 'Title 2', 0, 2, 2, 0),
+  (3, 'Approval content 3', 'Title 3', 0, 3, 1, 0);
+
+INSERT INTO APPROVALLINE (EMPNUM, LINENAME, LINEDEL)
+VALUES
+  (1, 'Manager', 0),
+  (2, 'Sales Manager', 0),
+  (3, 'HR Manager', 0);
+
+INSERT INTO APPROVALLINEDETAIL (LINENUM, EMPCHECKNUM, LINEDETAILSEQ)
+VALUES
+  (1, 2, 1),
+  (2, 3, 2),
+  (3, 1, 1);
+
+INSERT INTO DOCUMENT (DOCUMENTNUM, DOCUMENTNAME)
+VALUES
+  (1, 'Document 1'),
+  (2, 'Document 2');
+
+INSERT INTO DOCUMENTDETAIL (DOCUMENTNUM, FIELDNAME, SEQUENCE, FORMAT)
+VALUES
+  (1, 'Field 1', 1, 0),
+  (1, 'Field 2', 2, 1),
+  (2, 'Field 1', 1, 0);
+
+INSERT INTO APPROVALCONTENTDETAIL (APPROVALNUM, DOCUMENTNUM, KEY1, VALUE1, KEY2, VALUE2)
+VALUES
+  (1, 1, 'Key 1', 'Value 1', 'Key 2', 'Value 2'),
+  (2, 2, 'Key A', 'Value A', 'Key B', 'Value B');

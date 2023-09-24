@@ -6,5 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ApprovalDao {
 
-    public Data find(Long id);
+    public Data find();
 }

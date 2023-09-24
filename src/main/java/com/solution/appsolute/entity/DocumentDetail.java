@@ -13,6 +13,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class DocumentDetail {
 
+
+
     @Id
     @Column(nullable = false)
     private Long documentNum;

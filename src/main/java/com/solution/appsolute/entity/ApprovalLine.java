@@ -1,7 +1,6 @@
 package com.solution.appsolute.entity;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -23,7 +22,7 @@ public class ApprovalLine {
     private long empNum;
 
     @Column(length = 50, nullable = false)
-    private long lineName;
+    private String lineName;
 
     @Column(columnDefinition = "int default 0")
     private int lineDel;
