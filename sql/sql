@@ -6,150 +6,183 @@ grant all privileges on APPSOLUTE.* to 'APPSOLUTE'@'localhost';
 create user 'APPSOLUTE'@'%' identified by 'APPSOLUTE';
 grant all privileges on APPSOLUTE.* to 'APPSOLUTE'@'%';
 
-CREATE TABLE DEPT(
-	DEPTNO INT PRIMARY KEY,
-    DEPTNAME VARCHAR(20) NOT NULL,
-    DEPTLOC VARCHAR(30) NOT NULL,
-    DEPTBRANCH INT NOT NULL DEFAULT 0
-);
+CREATE TABLE `approval` (
+  `approval_num` bigint NOT NULL AUTO_INCREMENT,
+  `app_check` int DEFAULT 0,
+  `approval_date` timestamp ,
+  `app_content` int NOT NULL,
+  `app_del` int DEFAULT 0,
+  `app_title` varchar(500) NOT NULL,
+  `document_num` bigint DEFAULT NULL,
+  `emp_num` bigint NOT NULL,
+  `line_num` bigint DEFAULT NULL,
+  PRIMARY KEY (`approval_num`),
+  FOREIGN KEY (app_content) REFERENCES approval_content_detail(app_content_num),
+  FOREIGN KEY (document_num) REFERENCES document(document_num),
+  FOREIGN KEY (emp_num) REFERENCES employee(emp_num),
+  FOREIGN KEY (line_num) REFERENCES approval_line(line_num)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE EMPLOYEE(
-	EMPNUM INT auto_increment PRIMARY KEY,
-    EMPNAME VARCHAR(30) NOT NULL,
-    DEPTNO INT NOT NULL,
-    EMPPHONE VARCHAR(50) NOT NULL,
-    EMPEMAIL VARCHAR(100) NOT NULL,
-    EMPPASSWORD VARCHAR(50) NOT NULL,
-    EMPHIREDATE TIMESTAMP NOT NULL,
-    EMPPOSITION VARCHAR(20) NOT NULL,
-    EMPLEADER INT NOT NULL DEFAULT 0,
-    EMPMGR INT ,
-    FOREIGN KEY(DEPTNO) REFERENCES DEPT(DEPTNO)
-);
 
-    CREATE TABLE notice (
-    noNum INT AUTO_INCREMENT PRIMARY KEY,
-    noTitle VARCHAR(255) NOT NULL,
-    noContent VARCHAR(1000) NOT NULL,
-    EMPNUM INT NOT NULL,
-    noRegdate TIMESTAMP NOT NULL,
-    noHits INT DEFAULT 0,
-    noImp INT DEFAULT 0,
-    FOREIGN KEY (EMPNUM) REFERENCES employee(EMPNUM)
-);
+CREATE TABLE `approval_content_detail` (
+  `app_content_num` int auto_increment primary key,
+  `approval_num` bigint NOT NULL,
+  `document_num` bigint NOT NULL,
+  `key1` varchar(50) DEFAULT NULL,
+  `key2` varchar(50) DEFAULT NULL,
+  `key3` varchar(50) DEFAULT NULL,
+  `key4` varchar(50) DEFAULT NULL,
+  `key5` varchar(50) DEFAULT NULL,
+  `key6` varchar(50) DEFAULT NULL,
+  `key7` varchar(50) DEFAULT NULL,
+  `key8` varchar(50) DEFAULT NULL,
+  `key9` varchar(50) DEFAULT NULL,
+  `value1` varchar(50) DEFAULT NULL,
+  `value2` varchar(50) DEFAULT NULL,
+  `value3` varchar(50) DEFAULT NULL,
+  `value4` varchar(50) DEFAULT NULL,
+  `value5` varchar(50) DEFAULT NULL,
+  `value6` varchar(50) DEFAULT NULL,
+  `value7` varchar(50) DEFAULT NULL,
+  `value8` varchar(50) DEFAULT NULL,
+  `value9` varchar(50) DEFAULT NULL,
+  `note` varchar(2000),
+  FOREIGN KEY (document_num) REFERENCES document(document_num)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE REPLY (
-    RENum INT AUTO_INCREMENT PRIMARY KEY,
-    noNum int NOT NULL,
-    REContent VARCHAR(1000) NOT NULL,
-    RERegdate TIMESTAMP NOT NULL,
-    EMPNUM INT NOT NULL,
-    FOREIGN KEY (NONUM) REFERENCES NOTICE(NONUM),
-    FOREIGN KEY (EMPNUM) REFERENCES employee (empNum)
-);
-create table mail (
-   mailNum INT AUTO_INCREMENT PRIMARY KEY,
-    mailTitle varchar(100) not null,
-    mailContent varchar(500) not null,
-    mailDate TIMESTAMP,
-    MAILsender int not null,
-    MAILreciver int not null,
-    MAILCheck int default 0,
-    FOREIGN KEY (MAILsender) REFERENCES employee (empNum),
-    FOREIGN KEY (MAILreciver) REFERENCES employee (empNum)
-    );
 
-CREATE TABLE APPROVAL(
-	APPROVALNUM INT AUTO_INCREMENT PRIMARY KEY,
-    EMPNUM INT NOT NULL,
-    APPCONTENT VARCHAR(1000) NOT NULL,
-    APPTITLE VARCHAR(500) NOT NULL,
-    APPCHECK INT DEFAULT 0,
-    LINENUM INT,
-    DOCUMENTNUM INT,
-    APPDEL INT DEFAULT 0,
-    FOREIGN KEY (EMPNUM) REFERENCES EMPLOYEE(EMPNUM),
-	FOREIGN KEY(DOCUMENTNUM) REFERENCES DOCUMENT(DOCUMENTNUM)
-);
+CREATE TABLE `approval_detail` (
+  `approval_detail_num` bigint NOT NULL AUTO_INCREMENT,
+  `emp_check_num` bigint DEFAULT NULL,
+  `app_detail_seq` int NOT NULL,
+  `check_date` timestamp,
+  `approval_line_num` bigint DEFAULT NULL,
+  `approval_num` bigint NOT NULL,
+  `approval_status` int DEFAULT 0,
+  `reject_reason` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`approval_detail_num`),
+  FOREIGN KEY (approval_line_num) REFERENCES approval_line(line_num),
+  FOREIGN KEY (approval_num) REFERENCES approval(approval_num),
+  FOREIGN KEY (emp_check_num) REFERENCES employee(emp_num)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
- CREATE TABLE APPROVALDETAIL(
-	APPROVALDETAILNUM INT auto_increment PRIMARY KEY,
-    EMPCHECKNUM INT NOT NULL,
-    APPROVALLINENUM INT,
-    APPROVALSTATUS INT DEFAULT 0,
-    APPROVALDATE TIMESTAMP NOT NULL,
-    REJECTREASON VARCHAR(500) ,
-    APPDETAILSEQ INT NOT NULL,
-    APPROVALNUM INT NOT NULL,
-	FOREIGN KEY (EMPCHECKNUM) REFERENCES EMPLOYEE(EMPNUM),
-    FOREIGN KEY(APPROVALLINENUM) REFERENCES APPROVALLINE(LINENUM),
-    FOREIGN KEY(APPROVALNUM) REFERENCES APPROVAL(APPROVALNUM)
-);
 
-CREATE TABLE APPROVALLINE(
-	LINENUM INT AUTO_INCREMENT PRIMARY KEY,
-    EMPNUM INT NOT NULL,
-    LINENAME VARCHAR(50) NOT NULL,
-    LINEDEL INT DEFAULT 0,
-    FOREIGN KEY (EMPNUM) REFERENCES EMPLOYEE(EMPNUM)
-);
+CREATE TABLE `approval_line` (
+  `line_num` bigint NOT NULL AUTO_INCREMENT,
+  `emp_num` bigint NOT NULL,
+  `line_del` int DEFAULT 0,
+  `line_name` bigint NOT NULL,
+  PRIMARY KEY (`line_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE APPROVALLINEDETAIL (
-	LINEDETAILNUM INT AUTO_INCREMENT PRIMARY KEY,
-    LINENUM INT NOT NULL,
-    EMPCHECKNUM INT,
-    LINEDETAILSEQ INT ,
-    FOREIGN KEY (LINENUM) REFERENCES APPROVALLINE(LINENUM),
-    FOREIGN KEY (EMPCHECKNUM) REFERENCES EMPLOYEE(EMPNUM)
-);
 
-CREATE TABLE DOCUMENT(
-	DOCUMENTNUM INT AUTO_INCREMENT PRIMARY KEY,
-    DOCUMENTNAME VARCHAR(100) NOT NULL
-);
+CREATE TABLE `approval_line_detail` (
+  `line_detail_num` bigint NOT NULL AUTO_INCREMENT,
+  `line_num` bigint NOT NULL,
+  `employee` bigint NOT NULL,
+  `line_detail_seq` int NOT NULL,
+  PRIMARY KEY (`line_detail_num`),
+  FOREIGN KEY (line_num) REFERENCES approval_line(line_num)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO DEPT (DEPTNO, DEPTNAME, DEPTLOC, DEPTBRANCH)
-VALUES
-  (1, 'HR Department', 'New York', 0),
-  (2, 'Sales Department', 'Los Angeles', 0),
-  (3, 'Finance Department', 'Chicago', 0);
 
-INSERT INTO EMPLOYEE (EMPNUM, EMPNAME, DEPTNO, EMPPHONE, EMPEMAIL, EMPPASSWORD, EMPHIREDATE, EMPPOSITION, EMPLEADER, EMPMGR)
-VALUES
-  (1, 'John Doe', 1, '555-123-4567', 'john@example.com', 'password123', '2023-01-15', 'Manager', 0, NULL),
-  (2, 'Alice Smith', 2, '555-987-6543', 'alice@example.com', 'password456', '2023-02-20', 'Sales Associate', 1, 1),
-  (3, 'Bob Johnson', 1, '555-789-0123', 'bob@example.com', 'password789', '2023-03-10', 'HR Specialist', 0, 1);
+CREATE TABLE `dept` (
+  `dept_no` bigint NOT NULL AUTO_INCREMENT,
+  `dept_name` varchar(20) NOT NULL,
+  `dept_branch` int NOT NULL DEFAULT 0,
+  `dept_loc` varchar(30) NOT NULL,
+  PRIMARY KEY (`dept_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO APPROVAL (EMPNUM, APPCONTENT, APPTITLE, APPCHECK, LINENUM, DOCUMENTNUM, APPDEL)
-VALUES
-  (1, 'Approval content 1', 'Title 1', 0, 1, 1, 0),
-  (2, 'Approval content 2', 'Title 2', 0, 2, 2, 0),
-  (3, 'Approval content 3', 'Title 3', 0, 3, 1, 0);
 
-INSERT INTO APPROVALLINE (EMPNUM, LINENAME, LINEDEL)
-VALUES
-  (1, 'Manager', 0),
-  (2, 'Sales Manager', 0),
-  (3, 'HR Manager', 0);
+CREATE TABLE `document` (
+  `document_num` bigint NOT NULL AUTO_INCREMENT,
+  `document_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`document_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO APPROVALLINEDETAIL (LINENUM, EMPCHECKNUM, LINEDETAILSEQ)
-VALUES
-  (1, 2, 1),
-  (2, 3, 2),
-  (3, 1, 1);
 
-INSERT INTO DOCUMENT (DOCUMENTNUM, DOCUMENTNAME)
-VALUES
-  (1, 'Document 1'),
-  (2, 'Document 2');
+CREATE TABLE `document_detail` (
+  `document_num` bigint NOT NULL,
+  `document_detail_num` int auto_increment primary key,
+  `field_name` varchar(255) NOT NULL,
+  `format` int DEFAULT NULL,
+  FOREIGN KEY (document_num) REFERENCES document(document_num)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO DOCUMENTDETAIL (DOCUMENTNUM, FIELDNAME, SEQUENCE, FORMAT)
-VALUES
-  (1, 'Field 1', 1, 0),
-  (1, 'Field 2', 2, 1),
-  (2, 'Field 1', 1, 0);
 
-INSERT INTO APPROVALCONTENTDETAIL (APPROVALNUM, DOCUMENTNUM, KEY1, VALUE1, KEY2, VALUE2)
-VALUES
-  (1, 1, 'Key 1', 'Value 1', 'Key 2', 'Value 2'),
-  (2, 2, 'Key A', 'Value A', 'Key B', 'Value B');
+CREATE TABLE `employee` (
+  `emp_num` bigint NOT NULL AUTO_INCREMENT,
+  `dept_no` bigint NOT NULL,
+  `emp_email` varchar(100) NOT NULL,
+  `emp_hire_date` timestamp DEFAULT NULL,
+  `emp_leader` int NOT NULL DEFAULT 0,
+  `emp_mgr` int DEFAULT NULL,
+  `emp_name` varchar(30) NOT NULL,
+  `emp_password` varchar(50) NOT NULL,
+  `emp_phone` varchar(50) NOT NULL,
+  `emp_position` varchar(20) NOT NULL,
+  PRIMARY KEY (`emp_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+alter table employee add constraint dept_no
+foreign key(dept_no) references dept(dept_no);
+
+alter table employee modify emp_hire_date timestamp;
+
+ALTER TABLE approval_content_detail
+ADD CONSTRAINT unique_approval_num UNIQUE (approval_num);
+
+ALTER TABLE approval_content_detail
+ADD CONSTRAINT fk_approval_num
+FOREIGN KEY (approval_num)
+REFERENCES approval(approval_num);
+
+
+
+INSERT INTO dept (dept_name, dept_branch, dept_loc) VALUES
+('부서1', 1, '지점1'),
+('부서2', 1, '지점1'),
+('부서3', 2, '지점2');
+
+
+INSERT INTO document (document_name) VALUES
+('문서1'),
+('문서2'),
+('문서3');
+
+
+INSERT INTO employee (dept_no, emp_email, emp_hire_date, emp_leader, emp_mgr, emp_name, emp_password, emp_phone, emp_position) VALUES
+(4, 'emp1@example.com', '2023-01-01', 1, NULL, '직원1', 'password1', '123-4567-8901', '직급1'),
+(5, 'emp2@example.com', '2023-02-01', 0, 1, '직원2', 'password2', '234-5678-9012', '직급2'),
+(6, 'emp3@example.com', '2023-03-01', 0, 1, '직원3', 'password3', '345-6789-0123', '직급3');
+
+
+INSERT INTO approval (app_check, approval_date, app_content, app_del, app_title, document_num, emp_num, line_num) VALUES
+(0, '2023-01-15', 1, 0, '승인 문서 1', 1, 4, 1),
+(1, '2023-02-15', 2, 0, '승인 문서 2', 2, 5, 2),
+(0, '2023-03-15', 3, 0, '승인 문서 3', 3, 6, 3);
+
+
+INSERT INTO approval_content_detail (approval_num, document_num, key1, key2, key3, key4, key5, key6, key7, key8, key9, value1, value2, value3, value4, value5, value6, value7, value8, value9, note) VALUES
+(4, 1, 'Key1', 'Key2', 'Key3', 'Key4', 'Key5', 'Key6', 'Key7', 'Key8', 'Key9', 'Value1', 'Value2', 'Value3', 'Value4', 'Value5', 'Value6', 'Value7', 'Value8', 'Value9', 'Note1'),
+(5, 2, 'Key1', 'Key2', 'Key3', 'Key4', 'Key5', 'Key6', 'Key7', 'Key8', 'Key9', 'Value1', 'Value2', 'Value3', 'Value4', 'Value5', 'Value6', 'Value7', 'Value8', 'Value9', 'Note2'),
+(6, 3, 'Key1', 'Key2', 'Key3', 'Key4', 'Key5', 'Key6', 'Key7', 'Key8', 'Key9', 'Value1', 'Value2', 'Value3', 'Value4', 'Value5', 'Value6', 'Value7', 'Value8', 'Value9', 'Note3');
+
+
+INSERT INTO approval_detail (emp_check_num, app_detail_seq, check_date, approval_line_num, approval_num, approval_status, reject_reason) VALUES
+(4, 1, '2023-01-20', 1, 4, 1, NULL),
+(5, 2, '2023-02-20', 2, 5, 1, NULL),
+(6, 3, '2023-03-20', 3, 6, 0, '반려 사유1');
+
+
+INSERT INTO approval_line (emp_num, line_del, line_name) VALUES
+(1, 0, 1),
+(2, 0, 2),
+(3, 0, 3);
+
+
+INSERT INTO approval_line_detail (line_num, employee, line_detail_seq) VALUES
+(1, 1, 1),
+(2, 2, 2),
+(3, 3, 3);
