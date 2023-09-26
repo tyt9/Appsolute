@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Approval {
 
-    private int approvalNum;
+    private long approvalNum;
     private int appCheck;
     private LocalDateTime approvalDate;
     private int appContent;

@@ -7,54 +7,25 @@
 <body>
 <h1>구매결의서 입력</h1>
 
-<form action="/submitPurchaseRequest" method="post" th:object="${purchaseRequest}">
+<form action="/approval/purchase" method="post">
     <!-- 구매 요청 정보 -->
+    <p>기안자<input type="text" name="approvalName"></p>
+    <p>소속<input type="text" name="deptName"></p>
+    <p>기안일<input type="date" name="approvalDate"></p>
+    <p>문서번호(approval_num)<input type="text" name="approvalNum"></p>
     <div>
         <h2>구매 요청 정보</h2>
-        <p><label for="requester">요청자: <input type="text" th:field="*{requester}" required></label></p>
-        <p><label for="department">부서: <input type="text" th:field="*{department}" required></label></p>
-        <p><label for="requestDate">요청일: <input type="date" th:field="*{requestDate}" required></label></p>
+        <p>요청자<input type="text" name="name" /></p>
+        <p>요청부서<input type="text" name="dept"></p>
+        <p>요청금액<input type="text" name="price"></p>
     </div>
 
-    <!-- 상품 정보 -->
-    <div>
-        <h2>상품 정보</h2>
-        <div th:each="item, itemStat : *{items}">
-            <div th:object="${item}" th:field="*{items[__${itemStat.index}__]}">
-                <p><label for="productName">상품명: <input type="text" th:field="*{productName}" required></label></p>
-                <p><label for="quantity">수량: <input type="number" th:field="*{quantity}" required></label></p>
-                <p><label for="unitPrice">단가: <input type="number" th:field="*{unitPrice}" required></label></p>
-                <p><label for="totalPrice">총 가격: <input type="number" th:field="*{totalPrice}" readonly></label></p>
-                <button type="button" th:if="${itemStat.index > 0}" th:onclick="'javascript:removeItem(' + ${itemStat.index} + ');'">삭제</button>
-            </div>
-        </div>
-        <button type="button" onclick="addItem()">상품 추가</button>
-    </div>
-
-    <!-- 제출 버튼 -->
     <div>
         <button type="submit">구매 요청 제출</button>
     </div>
 </form>
 
-<script th:inline="javascript">
-    /* 상품 추가 버튼 클릭 시 */
-    function addItem() {
-        var newItem = {
-            productName: '',
-            quantity: 0,
-            unitPrice: 0,
-            totalPrice: 0
-        };
-        var newItemIndex = /*[[${#fields.size('purchaseRequest.items')}]]*/ 0;
-        /*[[${#fields.push('purchaseRequest.items', newItem)}]]*/
-    }
 
-    /* 상품 삭제 버튼 클릭 시 */
-    function removeItem(index) {
-        /*[[${#fields.remove('purchaseRequest.items', index)}]]*/
-    }
-</script>
 
 </body>
 </html>
