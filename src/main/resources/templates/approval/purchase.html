@@ -1,38 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>구매결의서</title>
+  <title>지출결의서</title>
 </head>
 <body>
-<h1>구매결의서</h1>
+<h1>지출결의서</h1>
+<form action="/approval/purchaseSuccess" method="post">
+<table>
+  <tr>
+    <td>제목:</td>
+    <td><input type="text" name="title"/></td>
+  </tr>
+  <tr>
+    <td>작성일자:</td>
+    <td><input type="text" name="creationDate"/></td>
+  </tr>
+  <tr>
+    <td>소속:</td>
+    <td><input type="text" name="department"/></td>
+  </tr>
+  <tr>
+    <td>작성자:</td>
+    <td><input type="text" name="author"/></td>
+  </tr>
+  <tr>
+    <td>총 금액:</td>
+    <td><input type="text" name="totalAmount"/></td>
+  </tr>
+  <tr>
+    <td>지출사유:</td>
+    <td><textarea name="reason" rows="4"></textarea></td>
+  </tr>
+  <tr>
+    <td><input type="submit"></td>
+  </tr>
+</table>
+</form>
+<h2>상세지출내역</h2>
 
-<!-- 상품 정보 -->
-<div>
-  <h2>상품 정보</h2>
-<!--  [[${list}]]-->
-  <ul>
-    <li th:each="dto, varstatus : ${list}">
-      [[${varstatus.index}]] --- [[${dto}]]
-    </li>
-  </ul>
-<!--  <p><span th:text="${list.approvalNum}"></span> </p>-->
-<!--  <p>상품명: <span th:text="${product.name}"></span></p>-->
-<!--  <p>기획의도: <span th:text="${product.plan}"></span></p>-->
-<!--  <p>상품컨셉: <span th:text="${product.concept}"></span></p>-->
-<!--  <p>고객현황: <span th:text="${product.customerStatus}"></span></p>-->
-<!--  <p>재료비: <span th:text="${product.materialCost}"></span></p>-->
-<!--  <p>노무비: <span th:text="${product.laborCost}"></span></p>-->
-<!--  <p>제조원가: <span th:text="${product.productionCost}"></span></p>-->
-<!--  <p>타사비교: <span th:text="${product.competitorComparison}"></span></p>-->
-<!--  <p>개발스케줄: <span th:text="${product.developmentSchedule}"></span></p>-->
-<!--  <p>세일즈 포인트: <span th:text="${product.salesPoint}"></span></p>-->
-</div>
+<table>
+  <thead>
+  <tr>
+    <th>항목</th>
+    <th>비용</th>
+  </tr>
+  </thead>
+  <tbody>
+<!--  <tr th:each="detail, detailStat : ${expenseReport.expenseDetails}">-->
+<!--    <td><input type="text" th:field="*{expenseDetails[__${detailStat.index}__].item}" /></td>-->
+<!--    <td><input type="text" th:field="*{expenseDetails[__${detailStat.index}__].cost}" /></td>-->
+<!--  </tr>-->
+  </tbody>
+</table>
 
-<!-- 결재 정보 -->
-<div>
-  <h2>결재 정보</h2>
-  <!-- 결재자 정보, 버튼 등을 추가할 수 있음 -->
-</div>
 </body>
 </html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>지출결의서</title>
+</head>
+<body>
+<h1>지출결의서</h1>
+
+<table>
+    <tr>
+        <td>제목:</td>
+        <td><input type="text" th:field="${expenseReport.title}" /></td>
+    </tr>
+    <tr>
+        <td>작성일자:</td>
+        <td><input type="text" th:field="${expenseReport.creationDate}" /></td>
+    </tr>
+    <tr>
+        <td>소속:</td>
+        <td><input type="text" th:field="${expenseReport.department}" /></td>
+    </tr>
+    <tr>
+        <td>작성자:</td>
+        <td><input type="text" th:field="${expenseReport.author}" /></td>
+    </tr>
+    <tr>
+        <td>총 금액:</td>
+        <td><input type="text" th:field="${expenseReport.totalAmount}" /></td>
+    </tr>
+    <tr>
+        <td>지출사유:</td>
+        <td><textarea th:field="${expenseReport.reason}" rows="4"></textarea></td>
+    </tr>
+</table>
+
+<h2>상세지출내역</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>항목</th>
+        <th>비용</th>
+    </tr>
+    </thead>
+    <tbody>
+<!--    <tr th:each="detail, detailStat : ${expenseReport.expenseDetails}">-->
+<!--        <td><input type="text" th:field="*{expenseDetails[__${detailStat.index}__].item}" /></td>-->
+<!--        <td><input type="text" th:field="*{expenseDetails[__${detailStat.index}__].cost}" /></td>-->
+<!--    </tr>-->
+    </tbody>
+</table>
+
+</body>
+</html>
