@@ -7,6 +7,10 @@
 <body>
 <h1>지출결의서</h1>
 <form action="/approval/purchaseSuccess" method="post" id="pageForm">
+  <div>결재선
+    첫번째 사람 : <input type="text" > // 선택할 수 있게
+  </div>
+
 <table>
   <tr>
     <td>제목:</td>
@@ -67,7 +71,7 @@
   var num = 1;
   var detailInput = $('#detailInput');
   $('#detailAddBtn').click(function (){
-    detailInput.append("  <tr class='trClass'>" +
+    detailInput.append("  <tr class='trClass'>" + // $('.trClass').each 로 한줄씩 insert 해줍시다
             "    <td>" +
             "      <select>" +
             "        <option value=\"물품구입비\">물품구입비</option>" +
