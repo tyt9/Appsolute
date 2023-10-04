@@ -1,11 +1,3 @@
-create database APPSOLUTE;
-
-create user 'APPSOLUTE'@'localhost' identified by 'APPSOLUTE';
-grant all privileges on APPSOLUTE.* to 'APPSOLUTE'@'localhost';
-
-create user 'APPSOLUTE'@'%' identified by 'APPSOLUTE';
-grant all privileges on APPSOLUTE.* to 'APPSOLUTE'@'%';
-
 CREATE TABLE `approval` (
   `approval_num` bigint NOT NULL AUTO_INCREMENT,
   `app_check` int DEFAULT 0,
@@ -125,64 +117,186 @@ CREATE TABLE `employee` (
   PRIMARY KEY (`emp_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+
 alter table employee add constraint dept_no
 foreign key(dept_no) references dept(dept_no);
 
-alter table employee modify emp_hire_date timestamp;
+// ALTER TABLE approval_content_detail
+// ADD CONSTRAINT unique_approval_num UNIQUE (approval_num);
 
-ALTER TABLE approval_content_detail
-ADD CONSTRAINT unique_approval_num UNIQUE (approval_num);
+// alter table approval_content_detail drop foreign key approval_content_detail_ibfk_1;
 
-ALTER TABLE approval_content_detail
-ADD CONSTRAINT fk_approval_num
-FOREIGN KEY (approval_num)
-REFERENCES approval(approval_num);
+alter table approval_line modify line_name varchar(50);
 
+alter table approval_content_detail drop column key1;
+alter table approval_content_detail drop column key2;
+alter table approval_content_detail drop column key3;
+alter table approval_content_detail drop column key4;
+alter table approval_content_detail drop column key5;
+alter table approval_content_detail drop column key6;
+alter table approval_content_detail drop column key7;
+alter table approval_content_detail drop column key8;
+alter table approval_content_detail drop column key9;
 
+alter table approval_content_detail drop column value1;
+alter table approval_content_detail drop column value2;
+alter table approval_content_detail drop column value3;
+alter table approval_content_detail drop column value4;
+alter table approval_content_detail drop column value5;
+alter table approval_content_detail drop column value6;
+alter table approval_content_detail drop column value7;
+alter table approval_content_detail drop column value8;
+alter table approval_content_detail drop column value9;
 
-INSERT INTO dept (dept_name, dept_branch, dept_loc) VALUES
-('부서1', 1, '지점1'),
-('부서2', 1, '지점1'),
-('부서3', 2, '지점2');
+alter table approval_content_detail drop column note;
 
+alter table approval_content_detail add column field_key varchar(50);
+alter table approval_content_detail add column field_value varchar(1000);
 
-INSERT INTO document (document_name) VALUES
-('문서1'),
-('문서2'),
-('문서3');
-
-
-INSERT INTO employee (dept_no, emp_email, emp_hire_date, emp_leader, emp_mgr, emp_name, emp_password, emp_phone, emp_position) VALUES
-(4, 'emp1@example.com', '2023-01-01', 1, NULL, '직원1', 'password1', '123-4567-8901', '직급1'),
-(5, 'emp2@example.com', '2023-02-01', 0, 1, '직원2', 'password2', '234-5678-9012', '직급2'),
-(6, 'emp3@example.com', '2023-03-01', 0, 1, '직원3', 'password3', '345-6789-0123', '직급3');
-
-
-INSERT INTO approval (app_check, approval_date, app_content, app_del, app_title, document_num, emp_num, line_num) VALUES
-(0, '2023-01-15', 1, 0, '승인 문서 1', 1, 4, 1),
-(1, '2023-02-15', 2, 0, '승인 문서 2', 2, 5, 2),
-(0, '2023-03-15', 3, 0, '승인 문서 3', 3, 6, 3);
-
-
-INSERT INTO approval_content_detail (approval_num, document_num, key1, key2, key3, key4, key5, key6, key7, key8, key9, value1, value2, value3, value4, value5, value6, value7, value8, value9, note) VALUES
-(4, 1, 'Key1', 'Key2', 'Key3', 'Key4', 'Key5', 'Key6', 'Key7', 'Key8', 'Key9', 'Value1', 'Value2', 'Value3', 'Value4', 'Value5', 'Value6', 'Value7', 'Value8', 'Value9', 'Note1'),
-(5, 2, 'Key1', 'Key2', 'Key3', 'Key4', 'Key5', 'Key6', 'Key7', 'Key8', 'Key9', 'Value1', 'Value2', 'Value3', 'Value4', 'Value5', 'Value6', 'Value7', 'Value8', 'Value9', 'Note2'),
-(6, 3, 'Key1', 'Key2', 'Key3', 'Key4', 'Key5', 'Key6', 'Key7', 'Key8', 'Key9', 'Value1', 'Value2', 'Value3', 'Value4', 'Value5', 'Value6', 'Value7', 'Value8', 'Value9', 'Note3');
+alter table approval add column reg_date timestamp;
+alter table approval add column creation_date timestamp;
 
 
-INSERT INTO approval_detail (emp_check_num, app_detail_seq, check_date, approval_line_num, approval_num, approval_status, reject_reason) VALUES
-(4, 1, '2023-01-20', 1, 4, 1, NULL),
-(5, 2, '2023-02-20', 2, 5, 1, NULL),
-(6, 3, '2023-03-20', 3, 6, 0, '반려 사유1');
+---------foreign key 없는 버전---------
 
 
-INSERT INTO approval_line (emp_num, line_del, line_name) VALUES
-(1, 0, 1),
-(2, 0, 2),
-(3, 0, 3);
+CREATE TABLE `approval` (
+  `approval_num` bigint NOT NULL AUTO_INCREMENT,
+  `app_check` int DEFAULT 0,
+  `approval_date` timestamp ,
+  `app_content` int NOT NULL,
+  `app_del` int DEFAULT 0,
+  `app_title` varchar(500) NOT NULL,
+  `document_num` bigint DEFAULT NULL,
+  `emp_num` bigint NOT NULL,
+  `line_num` bigint DEFAULT NULL,
+  `reg_date` timestamp,
+  `creation_date` timestamp,
+  PRIMARY KEY (`approval_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-INSERT INTO approval_line_detail (line_num, employee, line_detail_seq) VALUES
-(1, 1, 1),
-(2, 2, 2),
-(3, 3, 3);
+CREATE TABLE `approval_content_detail` (
+  `app_content_num` int auto_increment primary key,
+  `approval_num` bigint NOT NULL,
+  `document_num` bigint NOT NULL,
+  `field_key` varchar(50) DEFAULT NULL,
+  `field_value` varchar(1000) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `approval_detail` (
+  `approval_detail_num` bigint NOT NULL AUTO_INCREMENT,
+  `emp_check_num` bigint DEFAULT NULL,
+  `app_detail_seq` int NOT NULL,
+  `check_date` timestamp,
+  `approval_line_num` bigint DEFAULT NULL,
+  `approval_num` bigint NOT NULL,
+  `approval_status` int DEFAULT 0,
+  `reject_reason` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`approval_detail_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `approval_line` (
+  `line_num` bigint NOT NULL AUTO_INCREMENT,
+  `emp_num` bigint NOT NULL,
+  `line_del` int DEFAULT 0,
+  `line_name` varchar(50) NOT NULL,
+  PRIMARY KEY (`line_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `approval_line_detail` (
+  `line_detail_num` bigint NOT NULL AUTO_INCREMENT,
+  `line_num` bigint NOT NULL,
+  `employee` bigint NOT NULL,
+  `line_detail_seq` int NOT NULL,
+  PRIMARY KEY (`line_detail_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `dept` (
+  `dept_no` bigint NOT NULL AUTO_INCREMENT,
+  `dept_name` varchar(20) NOT NULL,
+  `dept_branch` int NOT NULL DEFAULT 0,
+  `dept_loc` varchar(30) NOT NULL,
+  PRIMARY KEY (`dept_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `document` (
+  `document_num` bigint NOT NULL AUTO_INCREMENT,
+  `document_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`document_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `document_detail` (
+  `document_num` bigint NOT NULL,
+  `document_detail_num` int auto_increment primary key,
+  `field_name` varchar(255) NOT NULL,
+  `format` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `employee` (
+  `emp_num` bigint NOT NULL AUTO_INCREMENT,
+  `dept_no` bigint NOT NULL,
+  `emp_email` varchar(100) NOT NULL,
+  `emp_hire_date` timestamp DEFAULT NULL,
+  `emp_leader` int NOT NULL DEFAULT 0,
+  `emp_mgr` int DEFAULT NULL,
+  `emp_name` varchar(30) NOT NULL,
+  `emp_password` varchar(50) NOT NULL,
+  `emp_phone` varchar(50) NOT NULL,
+  `emp_position` varchar(20) NOT NULL,
+  PRIMARY KEY (`emp_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+---------data insert-----------
+
+insert into document values(1, '지출결의서');
+
+insert into document_detail values(1, 1, '총 금액',1);
+insert into document_detail values(1, 2, '지출 사유',0);
+insert into document_detail values(1, 3, '상세물품내역분류',0);
+insert into document_detail values(1, 4, '상세금액',1);
+insert into document_detail values(1, 5, '상세지출설명',0);
+
+insert into dept values(1,'개발팀',0,'서울');
+
+insert into employee values(1,1,'1@email.com',now(),1,null,'이혜인',
+'test','010-1234-1234','사원');
+insert into employee values(2,1,'2@email.com',now(),0,null,'가나다',
+'test','010-1234-5678','대리');
+insert into employee values(3,1,'3@email.com',now(),0,null,'라마바',
+'test','010-1234-7890','과장');
+
+insert into approval values(1,0,now(),1,0,'지출결의서 입니다',1,1,0,now(),now());
+
+insert into approval_detail values(1,2,1,null,0,1,0,null);
+insert into approval_detail values(2,3,2,null,0,1,0,null);
+
+insert into approval_content_detail values(1,1,1,'총 금액','12000');
+insert into approval_content_detail values(2,1,1,'지출 사유','비품 구매');
+insert into approval_content_detail values(3,1,1,'상세물품내역분류1','펜');
+insert into approval_content_detail values(4,1,1,'상세금액1','3000');
+insert into approval_content_detail values(5,1,1,'상세지출설명1','펜 입니다');
+insert into approval_content_detail values(6,1,1,'상세물품내역분류2','다이어리');
+insert into approval_content_detail values(7,1,1,'상세금액2','9000');
+insert into approval_content_detail values(8,1,1,'상세지출설명2','다이어리 입니다');
+
+#drop table approval;
+#drop table approval_detail;
+#drop table approval_content_detail;
+#drop table approval_line;
+#drop table approval_line_detail;
+#drop table dept;
+#drop table document;
+#drop table document_detail;
+#drop table employee;
+#drop table mail;
+#drop table notice;
+#drop table reply;

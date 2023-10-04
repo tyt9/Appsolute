@@ -1,4 +1,4 @@
-package com.solution.appsolute.dto.approval;
+package com.solution.appsolute.approval.dto;
 
 import lombok.*;
 

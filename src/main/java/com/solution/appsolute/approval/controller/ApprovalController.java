@@ -1,8 +1,8 @@
-package com.solution.appsolute.controller.approval;
+package com.solution.appsolute.approval.controller;
 
-import com.solution.appsolute.dao.approval.ApprovalDao;
-import com.solution.appsolute.dto.approval.Approval;
-import com.solution.appsolute.dto.approval.ExpenseReport;
+import com.solution.appsolute.approval.dao.ApprovalDao;
+import com.solution.appsolute.approval.dto.Approval;
+import com.solution.appsolute.approval.dto.ExpenseReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,17 +24,13 @@ public class ApprovalController {
 //        } else {
 //            model.addAttribute("expenseReport", new ExpenseReport());
 //        }
+        approvalDao.find();
     }
 
     @PostMapping("/purchaseSuccess")
     public void purchasePost(Model model, ExpenseReport expenseReport) {
         model.addAttribute("expenseReport", expenseReport);
         System.out.println("--------------"+expenseReport);
-    }
-
-    @GetMapping("/purchaseForm")
-    public void purchase2(Model model, Approval approval) {
-
     }
 
 }

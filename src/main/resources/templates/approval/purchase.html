@@ -6,15 +6,19 @@
 </head>
 <body>
 <h1>지출결의서</h1>
-<form action="/approval/purchaseSuccess" method="post">
+<form action="/approval/purchaseSuccess" method="post" id="pageForm">
 <table>
   <tr>
     <td>제목:</td>
     <td><input type="text" name="title"/></td>
   </tr>
   <tr>
+    <td>기안일자:</td>
+    <td><input type="date" name="approvalDate"/></td>
+  </tr>
+  <tr>
     <td>작성일자:</td>
-    <td><input type="text" name="creationDate"/></td>
+    <td><input type="date" name="creationDate"/></td>
   </tr>
   <tr>
     <td>소속:</td>
@@ -32,27 +36,70 @@
     <td>지출사유:</td>
     <td><textarea name="reason" rows="4"></textarea></td>
   </tr>
-  <tr>
-    <td><input type="submit"></td>
-  </tr>
 </table>
-</form>
+
 <h2>상세지출내역</h2>
+
+<input type="button" id="detailAddBtn" th:value="추가" />
 
 <table>
   <thead>
   <tr>
     <th>항목</th>
     <th>비용</th>
+    <th>비고</th>
   </tr>
   </thead>
-  <tbody>
-<!--  <tr th:each="detail, detailStat : ${expenseReport.expenseDetails}">-->
-<!--    <td><input type="text" th:field="*{expenseDetails[__${detailStat.index}__].item}" /></td>-->
-<!--    <td><input type="text" th:field="*{expenseDetails[__${detailStat.index}__].cost}" /></td>-->
-<!--  </tr>-->
+  <tbody id="detailInput">
+
   </tbody>
 </table>
 
+  <p><input type="submit" id="pageSubmit"></p>
+</form>
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+
+  $(document).ready(function(){
+    document.getElementById('detailAddBtn').click();
+  });
+
+  var num = 1;
+  var detailInput = $('#detailInput');
+  $('#detailAddBtn').click(function (){
+    detailInput.append("  <tr class='trClass'>" +
+            "    <td>" +
+            "      <select>" +
+            "        <option value=\"물품구입비\">물품구입비</option>" +
+            "        <option value=\"출장비\">출장비</option>" +
+            "        <option value=\"식비\">식비</option>" +
+            "        <option value=\"교통비\">교통비</option>" +
+            "        <option value=\"기타\">기타</option>" +
+            "      </select>" +
+            "    </td>" +
+            "    <td><input type=\"text\" ></td>" +
+            "    <td><input type=\"text\" ></td>" +
+            "    <td><input type='button' class='removeDetail' value='삭제'/></td>" +
+            "  </tr>");
+    num++;
+  });
+
+  $(document).on("click", ".removeDetail", function(){
+    if($('.trClass').length > 1){
+      $(this).closest("tr").remove();
+    }
+
+  });
+
+  $('#pageSubmit').click(function (){
+    if (confirm("제출하시겠습니까?")) {
+      $('#pageForm').submit();
+    } else {
+      return false;
+    }
+  });
+
+
+</script>
 </body>
 </html>

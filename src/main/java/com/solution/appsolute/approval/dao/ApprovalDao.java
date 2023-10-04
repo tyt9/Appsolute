@@ -1,6 +1,6 @@
-package com.solution.appsolute.dao.approval;
+package com.solution.appsolute.approval.dao;
 
-import com.solution.appsolute.dto.approval.Approval;
+import com.solution.appsolute.approval.dto.Approval;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
