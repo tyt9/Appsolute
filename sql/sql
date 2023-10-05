@@ -266,6 +266,7 @@ insert into document_detail values(1, 4, '상세금액',1);
 insert into document_detail values(1, 5, '상세지출설명',0);
 
 insert into dept values(1,'개발팀',0,'서울');
+insert into dept values(2,'인사팀',0,'서울');
 
 insert into employee values(1,1,'1@email.com',now(),1,null,'이혜인',
 'test','010-1234-1234','사원');

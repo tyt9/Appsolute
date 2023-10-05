@@ -18,13 +18,11 @@ public class ApprovalController {
     private ApprovalDao approvalDao;
 
     @GetMapping("/purchase")
-    public void purchase1(Model model, ExpenseReport expenseReport){
-//        if (expenseReport != null) {
-//            model.addAttribute("expenseReport", expenseReport);
-//        } else {
-//            model.addAttribute("expenseReport", new ExpenseReport());
-//        }
-        approvalDao.find();
+    public void purchase1(Model model){
+        model.addAttribute("deptList", approvalDao.deptList());
+        model.addAttribute("empList", approvalDao.empList());
+//        System.out.println(approvalDao.deptList());
+//        System.out.println(approvalDao.empList());
     }
 
     @PostMapping("/purchaseSuccess")

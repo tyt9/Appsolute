@@ -5,9 +5,40 @@
 
 <mapper namespace="com.solution.appsolute.approval.dao.ApprovalDao">
 
+    <resultMap id="deptResultMap" type="com.solution.appsolute.approval.dto.Dept">
+        <result property="deptNo" column="dept_no"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="deptBranch" column="dept_branch"/>
+        <result property="deptLoc" column="dept_loc"/>
+    </resultMap>
+
+    <resultMap id="empResultMap" type="com.solution.appsolute.approval.dto.Employee">
+        <result property="empNum" column="emp_num"/>
+        <result property="deptNo" column="dept_no"/>
+        <result property="empEmail" column="emp_email"/>
+        <result property="empHireDate" column="emp_hire_date"/>
+        <result property="empLeader" column="emp_leader"/>
+        <result property="empMgr" column="emp_mgr"/>
+        <result property="empName" column="emp_name"/>
+        <result property="empPassword" column="emp_password"/>
+        <result property="empPhone" column="emp_phone"/>
+        <result property="empPosition" column="emp_position"/>
+
+    </resultMap>
+
     <select id="find" resultType="java.util.Map">
         select * from approval
     </select>
+
+    <select id="deptList" resultMap="deptResultMap">
+        select * from dept
+    </select>
+
+    <select id="empList" resultMap="empResultMap">
+        select * from employee
+    </select>
+
+
 
 
 </mapper>
