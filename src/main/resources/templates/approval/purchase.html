@@ -6,9 +6,10 @@
 </head>
 <body>
 <h1>지출결의서</h1>
+pickMe일때 안넘어가게 만들어주세요
 <form action="/approval/purchaseSuccess" method="post" id="pageForm">
-  <div>결재선<br>
-    첫번째 사람 :
+  <div>결재선 <input type="button" th:id="addPerson" th:value="추가"/><br>
+
 
 
 <!--    <th:block th:each="dept : ${deptList}">-->
@@ -21,17 +22,17 @@
         <option th:value="${deptList.deptNo}" th:text="${deptList.deptName}"></option>
       </th:block>
     </select>
-    <select>
-      <option th:text="선택하세요"></option>
+    <select th:class="empSelBox">
+      <option th:value="pickMe" th:text="선택하세요"></option>
       <th:block th:each="empList : ${empList}">
-        <option th:hidden="hidden" th:value="${empList.empNum}" th:text="${empList.empName}"></option>
-        <input th:class="hiddenDeptNo" type="hidden" th:value="${empList.deptNo}">
+        <option th:class="optionClass" th:attr="data-deptnum=${empList.deptNo}" th:style="${'display:none'}" th:value="${empList.empNum}" th:text="${empList.empName}"></option>
       </th:block>
     </select>
-<!--    <select>-->
-<!--      <th:block th:each=""-->
-<!--    </select>-->
+    <div th:id="addPersonDiv">
+
+    </div>
   </div>
+
 
 <table>
   <tr>
@@ -125,14 +126,22 @@
     }
   });
 
-  $('#deptPick').change(function (){
-    var deptNo = $(this).val();
-    // console.log($('#deptPick option:selected').val());
-    $('.hiddenDeptNo').each(function (){
-      if ($(this).val() == deptNo) {
 
+  $('#deptPick').change(function (){
+    $('.optionClass').css('display', 'none');
+    $('.empSelBox').val('pickMe').prop('selected', true);
+    var deptNo = $(this).val();
+
+    $('.optionClass').each(function (){
+      if ($(this).data('deptnum') == deptNo) {
+        $(this).css('display', '');
       }
     });
+  });
+
+  $('#addPerson').click(function (){
+    $('#addPersonDiv').append("결재 : <input type=\"text\">" +
+            "      <input type='button' value='삭제' /><br>");
   });
 
 </script>
