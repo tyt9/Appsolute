@@ -11,6 +11,7 @@ import lombok.*;
 public class ExpenseReport {
 
     private String title;
+    private String approvalDate;
     private String creationDate;
     private String department;
     private String author;

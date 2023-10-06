@@ -23,7 +23,11 @@
         <result property="empPassword" column="emp_password"/>
         <result property="empPhone" column="emp_phone"/>
         <result property="empPosition" column="emp_position"/>
+    </resultMap>
 
+    <resultMap id="documentResultMap" type="com.solution.appsolute.approval.dto.Document">
+        <result property="documentNum" column="document_num"/>
+        <result property="documentName" column="document_name"/>
     </resultMap>
 
     <select id="find" resultType="java.util.Map">
@@ -37,6 +41,16 @@
     <select id="empList" resultMap="empResultMap">
         select * from employee
     </select>
+
+    <insert id="insertApp" parameterType="com.solution.appsolute.approval.dto.Basic">
+        <selectKey keyProperty="approvalNum" resultType="java.lang.Long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into approval values
+        (null, 0, #{approvalDate} , 1, 0, #{title},#{documentNum}, #{empNum}, #{lineNum}, now(), #{creationDate})
+    </insert>
+
+
 
 
 

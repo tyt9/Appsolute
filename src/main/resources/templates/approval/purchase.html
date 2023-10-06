@@ -8,13 +8,8 @@
 <h1>지출결의서</h1>
 pickMe일때 안넘어가게 만들어주세요
 <form action="/approval/purchaseSuccess" method="post" id="pageForm">
-  <div>결재선 <input type="button" th:id="addPerson" th:value="추가"/><br>
+  <div>결재선 <br>
 
-
-
-<!--    <th:block th:each="dept : ${deptList}">-->
-<!--      <p th:text="${dept.deptName}"></p>-->
-<!--    </th:block>-->
 
     <select id="deptPick">
       <option th:text="선택하세요"></option>
@@ -25,12 +20,12 @@ pickMe일때 안넘어가게 만들어주세요
     <select th:class="empSelBox">
       <option th:value="pickMe" th:text="선택하세요"></option>
       <th:block th:each="empList : ${empList}">
-        <option th:class="optionClass" th:attr="data-deptnum=${empList.deptNo}" th:style="${'display:none'}" th:value="${empList.empNum}" th:text="${empList.empName}"></option>
+        <option th:class="optionClass" th:attr="data-deptnum=${empList.deptNo},data-empnum=${empList.empNum}" th:style="${'display:none'}" th:value="${empList.empNum}" th:text="${empList.empName}"></option>
       </th:block>
-    </select>
+    </select><input type="button" th:id="addPerson" th:value="추가"/>
     <div th:id="addPersonDiv">
 
-    </div>
+    </div><br><br>
   </div>
 
 
@@ -63,7 +58,12 @@ pickMe일때 안넘어가게 만들어주세요
     <td>지출사유:</td>
     <td><textarea name="reason" rows="4"></textarea></td>
   </tr>
+  <tr>
+    <td>문서번호:</td>
+    <td><input type="text" th:value="1" name="documentNum" readonly/></td>
+  </tr>
 </table>
+
 
 <h2>상세지출내역</h2>
 
@@ -83,6 +83,8 @@ pickMe일때 안넘어가게 만들어주세요
 </table>
 
   <p><input type="submit" id="pageSubmit"></p>
+  <p><input type="submit" th:value="결재선제출" id="personSubmit"></p>
+  <p><input type="submit" th:value="디테일제출" id="detailSubmit"></p>
 </form>
 <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
@@ -140,9 +142,51 @@ pickMe일때 안넘어가게 만들어주세요
   });
 
   $('#addPerson').click(function (){
-    $('#addPersonDiv').append("결재 : <input type=\"text\">" +
-            "      <input type='button' value='삭제' /><br>");
+    var deptNameSel = $('#deptPick option:selected').text();
+    var empName = $('.empSelBox option:selected').text();
+    var empNoSel = $('.empSelBox option:selected').data('empnum');
+    if (empName == "선택하세요") {
+      alert("사원을 선택하세요");
+    } else {
+      $('#addPersonDiv').append("<div>결재 : <input th:attr='data-empnosel="+empNoSel+"' type=\"text\" value='"+empName+"("+deptNameSel+")"+"' readonly>" +
+              "      <input class='addPersonBtnClass' type='button' value='삭제' /><br></div>");
+    }
   });
+
+  $(document).on("click", ".addPersonBtnClass", function(){
+    // console.log($(this).attr('id'));
+    $(this).parent('div').remove();
+  });
+
+  $('#pageSubmit').click(function (){
+    var basic = {
+      approvalDate : $("input[name=approvalDate]").val(),
+      title : $("input[name=title]").val(),
+      creationDate : $("input[name=creationDate]").val(),
+      empNum : $("input[name=author]").val(),
+      documentNum : $("input[name=documentNum]").val(),
+    }
+    var jsonData = JSON.stringify(basic)
+    $.ajax({
+      data: jsonData,
+      url: "/form/purchaseBasic",
+      type: "POST",
+      contentType: "application/json",
+      success: function (data) {
+        console.log(data);
+      },
+      error: function() {
+        alert("Error occurred");
+      }
+    });
+  });
+
+  $('#personSubmit').click(function (){
+    $('#addPersonDiv div').each(function (){
+      console.log($(this).children().first().data('empnosel')); // undefined
+    });
+  });
+
 
 </script>
 </body>

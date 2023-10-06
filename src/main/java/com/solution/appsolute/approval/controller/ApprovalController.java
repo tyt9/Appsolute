@@ -28,7 +28,7 @@ public class ApprovalController {
     @PostMapping("/purchaseSuccess")
     public void purchasePost(Model model, ExpenseReport expenseReport) {
         model.addAttribute("expenseReport", expenseReport);
-        System.out.println("--------------"+expenseReport);
+//        System.out.println("--------------"+expenseReport);
     }
 
 }

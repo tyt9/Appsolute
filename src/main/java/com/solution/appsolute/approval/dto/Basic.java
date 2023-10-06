@@ -2,8 +2,6 @@ package com.solution.appsolute.approval.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -11,8 +9,12 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 public class Basic {
-    private String approvalName;
-    private String deptName;
+    private long approvalNum;
     private String approvalDate;
-    private String approvalNum;
+    private String title;
+    private int documentNum;
+    private int empNum; //세션
+    private int lineNum;
+    private String regDate;
+    private String creationDate;
 }
