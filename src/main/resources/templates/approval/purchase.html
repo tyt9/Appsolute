@@ -82,9 +82,9 @@ pickMe일때 안넘어가게 만들어주세요
   </tbody>
 </table>
 
-  <p><input type="submit" id="pageSubmit"></p>
-  <p><input type="submit" th:value="결재선제출" id="personSubmit"></p>
-  <p><input type="submit" th:value="디테일제출" id="detailSubmit"></p>
+  <p><input type="button" id="pageSubmit"></p>
+  <p><input type="button" th:value="결재선제출" id="personSubmit"></p>
+  <p><input type="button" th:value="디테일제출" id="detailSubmit"></p>
 </form>
 <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
@@ -148,7 +148,7 @@ pickMe일때 안넘어가게 만들어주세요
     if (empName == "선택하세요") {
       alert("사원을 선택하세요");
     } else {
-      $('#addPersonDiv').append("<div>결재 : <input th:attr='data-empnosel="+empNoSel+"' type=\"text\" value='"+empName+"("+deptNameSel+")"+"' readonly>" +
+      $('#addPersonDiv').append("<div>결재 : <input data-empnosel="+empNoSel+" type=\"text\" value='"+empName+"("+deptNameSel+")"+"' readonly>" +
               "      <input class='addPersonBtnClass' type='button' value='삭제' /><br></div>");
     }
   });
@@ -158,7 +158,9 @@ pickMe일때 안넘어가게 만들어주세요
     $(this).parent('div').remove();
   });
 
-  $('#pageSubmit').click(function (){
+
+  $(document).on("click", "#pageSubmit", function (){ // 클릭했을 때 새로 읽어오기 하게 바꾸기
+    var insertedKey = 0;
     var basic = {
       approvalDate : $("input[name=approvalDate]").val(),
       title : $("input[name=title]").val(),
@@ -173,20 +175,66 @@ pickMe일때 안넘어가게 만들어주세요
       type: "POST",
       contentType: "application/json",
       success: function (data) {
-        console.log(data);
+        insertedKey = data;
+
+        var empNoDataArray = [];
+        empNoDataArray.push(parseInt(insertedKey));
+        $('#addPersonDiv div').each(function (){
+          var empNoData = $(this).children().first().data('empnosel');
+          empNoDataArray.push(parseInt(empNoData));
+          console.log(empNoData);
+        });
+        $.ajax({
+          data: JSON.stringify({ empNoData: empNoDataArray }),
+          url: "/form/addPerson",
+          type: "POST",
+          contentType: "application/json",
+          success: function (data) {
+            // console.log(data);
+          },
+          error: function() {
+            alert("Error occurred");
+          }
+        });
+
       },
       error: function() {
         alert("Error occurred");
       }
     });
+
+
+
+
   });
 
-  $('#personSubmit').click(function (){
-    $('#addPersonDiv div').each(function (){
-      console.log($(this).children().first().data('empnosel')); // undefined
-    });
-  });
+  // $('#personSubmit').click(function (){
+  //   $('#addPersonDiv div').each(function (){
+  //     console.log($(this).children().first().data('empnosel')); // undefined
+  //   });
+  // });
 
+  // $(document).on("click", "#personSubmit", function(){
+  //   var empNoDataArray = [];
+  //   $('#addPersonDiv div').each(function (){
+  //     var empNoData = $(this).children().first().data('empnosel');
+  //     empNoDataArray.push(parseInt(empNoData));
+  //     console.log(empNoData);
+  //   });
+  //     $.ajax({
+  //       data: JSON.stringify({ empNoData: empNoDataArray }),
+  //       url: "/form/addPerson",
+  //       type: "POST",
+  //       contentType: "application/json",
+  //       success: function (data) {
+  //         // console.log(data);
+  //       },
+  //       error: function() {
+  //         alert("Error occurred");
+  //       }
+  //     });
+  //
+  // });
 
 </script>
 </body>

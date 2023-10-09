@@ -50,6 +50,13 @@
         (null, 0, #{approvalDate} , 1, 0, #{title},#{documentNum}, #{empNum}, #{lineNum}, now(), #{creationDate})
     </insert>
 
+    <insert id="insertApp" parameterType="com.solution.appsolute.approval.dto.Basic">
+        insert into approval_detail values
+        (null, get(), index, null, 0, insertedKey, 0, null);
+    </insert>
+
+
+
 
 
 
