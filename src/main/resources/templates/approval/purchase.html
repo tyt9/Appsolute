@@ -197,7 +197,8 @@
                 // console.log($(this).children().children().eq(0).val());
                 // console.log($(this).children().children().eq(1).val());
                 // console.log($(this).children().children().eq(2).val());
-                var addDetailVO = {
+
+                var addDetailVO = {  // categoryKey, costKey, detailKey 필드 만들기 -- 총금액 & 지출사유 필드 추가할 수 있게 만들기
                   approvalNum : insertedKey,
                   documentNum : $('#documentNum').val(),
                   category : $(this).children().children().eq(0).val(),
