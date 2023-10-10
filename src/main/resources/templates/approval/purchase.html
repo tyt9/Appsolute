@@ -6,7 +6,6 @@
 </head>
 <body>
 <h1>지출결의서</h1>
-pickMe일때 안넘어가게 만들어주세요
 <form action="/approval/purchaseSuccess" method="post" id="pageForm">
   <div>결재선 <br>
 
@@ -60,7 +59,7 @@ pickMe일때 안넘어가게 만들어주세요
   </tr>
   <tr>
     <td>문서번호:</td>
-    <td><input type="text" th:value="1" name="documentNum" readonly/></td>
+    <td><input type="text" th:value="1" name="documentNum" th:id="documentNum" readonly/></td>
   </tr>
 </table>
 
@@ -82,8 +81,7 @@ pickMe일때 안넘어가게 만들어주세요
   </tbody>
 </table>
 
-  <p><input type="button" id="pageSubmit"></p>
-  <p><input type="button" th:value="결재선제출" id="personSubmit"></p>
+  <p><input type="button" th:value="제출" id="pageSubmit"></p>
   <p><input type="button" th:value="디테일제출" id="detailSubmit"></p>
 </form>
 <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -120,13 +118,13 @@ pickMe일때 안넘어가게 만들어주세요
 
   });
 
-  $('#pageSubmit').click(function (){
-    if (confirm("제출하시겠습니까?")) {
-      $('#pageForm').submit();
-    } else {
-      return false;
-    }
-  });
+  // $('#pageSubmit').click(function (){
+  //   if (confirm("제출하시겠습니까?")) {
+  //     $('#pageForm').submit();
+  //   } else {
+  //     return false;
+  //   }
+  // });
 
 
   $('#deptPick').change(function (){
@@ -160,80 +158,117 @@ pickMe일때 안넘어가게 만들어주세요
 
 
   $(document).on("click", "#pageSubmit", function (){ // 클릭했을 때 새로 읽어오기 하게 바꾸기
-    var insertedKey = 0;
-    var basic = {
-      approvalDate : $("input[name=approvalDate]").val(),
-      title : $("input[name=title]").val(),
-      creationDate : $("input[name=creationDate]").val(),
-      empNum : $("input[name=author]").val(),
-      documentNum : $("input[name=documentNum]").val(),
-    }
-    var jsonData = JSON.stringify(basic)
-    $.ajax({
-      data: jsonData,
-      url: "/form/purchaseBasic",
-      type: "POST",
-      contentType: "application/json",
-      success: function (data) {
-        insertedKey = data;
-
-        var empNoDataArray = [];
-        empNoDataArray.push(parseInt(insertedKey));
-        $('#addPersonDiv div').each(function (){
-          var empNoData = $(this).children().first().data('empnosel');
-          empNoDataArray.push(parseInt(empNoData));
-          console.log(empNoData);
-        });
-        $.ajax({
-          data: JSON.stringify({ empNoData: empNoDataArray }),
-          url: "/form/addPerson",
-          type: "POST",
-          contentType: "application/json",
-          success: function (data) {
-            // console.log(data);
-          },
-          error: function() {
-            alert("Error occurred");
-          }
-        });
-
-      },
-      error: function() {
-        alert("Error occurred");
+    if (confirm("제출하시겠습니까?")) {
+      var insertedKey = 0;
+      var basic = {
+        approvalDate : $("input[name=approvalDate]").val(),
+        title : $("input[name=title]").val(),
+        creationDate : $("input[name=creationDate]").val(),
+        empNum : $("input[name=author]").val(),
+        documentNum : $("input[name=documentNum]").val(),
       }
-    });
+      var jsonData = JSON.stringify(basic)
+      $.ajax({
+        data: jsonData,
+        url: "/form/purchaseBasic",
+        type: "POST",
+        contentType: "application/json",
+        success: function (data) {
+          insertedKey = data;
+
+          var empNoDataArray = [];
+          empNoDataArray.push(parseInt(insertedKey));
+          $('#addPersonDiv div').each(function (){
+            var empNoData = $(this).children().first().data('empnosel');
+            empNoDataArray.push(parseInt(empNoData));
+            console.log(empNoData);
+          });
+
+          console.log("여기까지 오나요");
+          $.ajax({
+            data: JSON.stringify({ empNoData: empNoDataArray }),
+            url: "/form/addPerson",
+            type: "POST",
+            contentType: "application/json",
+            success: function (data) {
+              console.log(data);
+              // location.href="/approval/purchaseSuccess";
+              $('.trClass').each(function () {
+                // console.log($(this).children().children().eq(0).val());
+                // console.log($(this).children().children().eq(1).val());
+                // console.log($(this).children().children().eq(2).val());
+                var addDetailVO = {
+                  approvalNum : insertedKey,
+                  documentNum : $('#documentNum').val(),
+                  category : $(this).children().children().eq(0).val(),
+                  cost : $(this).children().children().eq(1).val(),
+                  detail : $(this).children().children().eq(2).val(),
+                }
+                var jsonData1 = JSON.stringify(addDetailVO);
+                console.log(addDetailVO);
+
+                $.ajax({
+                  data: jsonData1,
+                  url: "/form/addDetail",
+                  type: "POST",
+                  contentType: "application/json",
+                  success: function (data) {
+                    console.log(data);
+                  },
+                  error: function() {
+                    alert("Error occurred");
+                  }
+                });
+              })
 
 
 
+              // $('#pageForm').submit();
+            },
+            error: function() {
+              alert("Error occurred");
+            }
+          });
+
+        },
+        error: function() {
+          alert("Error occurred");
+        }
+      });
+    } else {
+      return false;
+    }
 
   });
 
-  // $('#personSubmit').click(function (){
-  //   $('#addPersonDiv div').each(function (){
-  //     console.log($(this).children().first().data('empnosel')); // undefined
-  //   });
-  // });
-
-  // $(document).on("click", "#personSubmit", function(){
-  //   var empNoDataArray = [];
-  //   $('#addPersonDiv div').each(function (){
-  //     var empNoData = $(this).children().first().data('empnosel');
-  //     empNoDataArray.push(parseInt(empNoData));
-  //     console.log(empNoData);
-  //   });
+  // $(document).on("click", "#detailSubmit", function (){
+  //   $('.trClass').each(function () {
+  //     // console.log($(this).children().children().eq(0).val());
+  //     // console.log($(this).children().children().eq(1).val());
+  //     // console.log($(this).children().children().eq(2).val());
+  //     var addDetailVO = {
+  //       approvalNum : insertedKey,
+  //       documentNum : $('#documentNum').val(),
+  //       category : $(this).children().children().eq(0).val(),
+  //       cost : $(this).children().children().eq(1).val(),
+  //       detail : $(this).children().children().eq(2).val(),
+  //     }
+  //     var jsonData1 = JSON.stringify(addDetailVO);
+  //     console.log(addDetailVO);
+  //
   //     $.ajax({
-  //       data: JSON.stringify({ empNoData: empNoDataArray }),
-  //       url: "/form/addPerson",
+  //       data: jsonData1,
+  //       url: "/form/addDetail",
   //       type: "POST",
   //       contentType: "application/json",
   //       success: function (data) {
-  //         // console.log(data);
+  //         console.log(data);
   //       },
   //       error: function() {
   //         alert("Error occurred");
   //       }
   //     });
-  //
+  //   })
   // });
 
 </script>
