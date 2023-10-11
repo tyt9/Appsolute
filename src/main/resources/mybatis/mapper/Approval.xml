@@ -67,7 +67,10 @@
         where d.document_num = 1
     </select>
 
-
+    <insert id="addPurchaseDetail" parameterType="com.solution.appsolute.approval.dto.PurchaseVO">
+        insert into approval_content_detail values
+            (null, #{approvalNum}, #{documentNum}, #{fieldKey}, #{fieldValue})
+    </insert>
 
 
 

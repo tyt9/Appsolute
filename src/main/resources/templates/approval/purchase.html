@@ -192,39 +192,91 @@
             success: function (data) {
               console.log(data);
               // location.href="/approval/purchaseSuccess";
-              $('.trClass').each(function () {
-                // console.log($(this).children().children().eq(0).val());
-                // console.log($(this).children().children().eq(1).val());
-                // console.log($(this).children().children().eq(2).val());
+              var purchaseVO1 = {
+                approvalNum : insertedKey,
+                documentNum : $('#documentNum').val(),
+                fieldKey : $('#documentNum').data('totalkey'),
+                fieldValue : $("input[name=totalAmount]").val(),
+              };
+              var purchaseVO2 = {
+                approvalNum : insertedKey,
+                documentNum : $('#documentNum').val(),
+                fieldKey : $('#documentNum').data('reasonkey'),
+                fieldValue : $("textarea[name=reason]").val(),
+              };
+              var purchaseArray = [purchaseVO1, purchaseVO2];
+              var jsonDataPur = JSON.stringify(purchaseArray);
+              $.ajax({
+                data: jsonDataPur,
+                url: "/form/addPurchase",
+                type: "POST",
+                contentType: "application/json",
+                success: function (data) {
 
-                var addDetailVO = {  // categoryKey, costKey, detailKey 필드 만들기 -- 총금액 & 지출사유 필드 추가할 수 있게 만들기
-                  approvalNum : insertedKey,
-                  documentNum : $('#documentNum').val(),
-                  categoryKey : $('#documentNum').data('categorykey'),
-                  category : $(this).children().children().eq(0).val(),
-                  costKey : $('#documentNum').data('costkey'),
-                  cost : $(this).children().children().eq(1).val(),
-                  detailKey : $('#documentNum').data('detailkey'),
-                  detail : $(this).children().children().eq(2).val(),
+
+                  $('.trClass').each(function () {
+                    // console.log($(this).children().children().eq(0).val());
+                    // console.log($(this).children().children().eq(1).val());
+                    // console.log($(this).children().children().eq(2).val());
+
+                    var purchaseVO11 = {
+                      approvalNum : insertedKey,
+                      documentNum : $('#documentNum').val(),
+                      fieldKey : $('#documentNum').data('categorykey'),
+                      fieldValue : $(this).children().children().eq(0).val(),
+                    }
+                    var purchaseVO22 = {
+                      approvalNum : insertedKey,
+                      documentNum : $('#documentNum').val(),
+                      fieldKey : $('#documentNum').data('costkey'),
+                      fieldValue : $(this).children().children().eq(1).val(),
+                    }
+                    var purchaseVO33 = {
+                      approvalNum : insertedKey,
+                      documentNum : $('#documentNum').val(),
+                      fieldKey : $('#documentNum').data('detailkey'),
+                      fieldValue : $(this).children().children().eq(2).val(),
+                    }
+                    var purchaseVOeachArray = [purchaseVO11,purchaseVO22,purchaseVO33]
+                    console.log(purchaseVOeachArray)
+
+                    // var addDetailVO = {  // categoryKey, costKey, detailKey 필드 만들기 -- 총금액 & 지출사유 필드 추가할 수 있게 만들기
+                    //   approvalNum : insertedKey,
+                    //   documentNum : $('#documentNum').val(),
+                    //   categoryKey : $('#documentNum').data('categorykey'),
+                    //   category : $(this).children().children().eq(0).val(),
+                    //   costKey : $('#documentNum').data('costkey'),
+                    //   cost : $(this).children().children().eq(1).val(),
+                    //   detailKey : $('#documentNum').data('detailkey'),
+                    //   detail : $(this).children().children().eq(2).val(),
+                    // }
+                    var jsonData1 = JSON.stringify(purchaseVOeachArray);
+                    // console.log(addDetailVO);
+
+                    $.ajax({
+                      data: jsonData1,
+                      url: "/form/addDetail",
+                      type: "POST",
+                      contentType: "application/json",
+                      success: function (data) {
+                        console.log(data);
+                      },
+                      error: function() {
+                        alert("Error occurred");
+                      }
+                    });
+                  })
+
+
+
+
+
+
+                },
+                error: function() {
+                  alert("add purchase Error occurred");
                 }
-                var jsonData1 = JSON.stringify(addDetailVO);
-                console.log(addDetailVO);
-
-                $.ajax({
-                  data: jsonData1,
-                  url: "/form/addDetail",
-                  type: "POST",
-                  contentType: "application/json",
-                  success: function (data) {
-                    console.log(data);
-                  },
-                  error: function() {
-                    alert("Error occurred");
-                  }
-                });
-              })
-
-
+              });
 
               // $('#pageForm').submit();
             },

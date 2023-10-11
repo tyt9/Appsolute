@@ -4,9 +4,11 @@ import com.solution.appsolute.approval.dao.ApprovalDao;
 import com.solution.appsolute.approval.dto.AddDetailVO;
 import com.solution.appsolute.approval.dto.AddPersonVO;
 import com.solution.appsolute.approval.dto.Basic;
+import com.solution.appsolute.approval.dto.PurchaseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,8 +45,16 @@ public class AjaxController {
     }
 
     @RequestMapping(value = "/addDetail", method = RequestMethod.POST)
-    public int addDetail(@RequestBody AddDetailVO addDetailVO){
-        System.out.println(addDetailVO); //VO 이렇게 만들면 안되내요...
+    public int addDetail(@RequestBody List<PurchaseVO> detailPurchaseArray){
+        System.out.println(detailPurchaseArray);
+        return 0;
+    }
+
+    @RequestMapping(value = "/addPurchase", method = RequestMethod.POST)
+    public int addPurchase(@RequestBody List<PurchaseVO> purchaseArray) {
+        System.out.println(purchaseArray);
+        approvalDao.addPurchaseDetail(purchaseArray.get(0));
+        approvalDao.addPurchaseDetail(purchaseArray.get(1));
         return 0;
     }
 }

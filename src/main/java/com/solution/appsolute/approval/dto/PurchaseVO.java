@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class PurchaseVO {
-    private String totalKey;
-    private int total;
-    private String reasonKey;
-    private String reason;
+    private long approvalNum;
+    private String documentNum;
+    private String fieldKey;
+    private String fieldValue;
 }
