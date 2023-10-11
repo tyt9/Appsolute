@@ -59,10 +59,9 @@
   </tr>
   <tr>
     <td>문서번호:</td>
-    <td><input type="text" th:value="1" name="documentNum" th:id="documentNum" readonly/></td>
+    <td><input type="text" th:attr="data-totalkey=${purchaseFieldNames[0]},data-reasonkey=${purchaseFieldNames[1]},data-categorykey=${purchaseFieldNames[2]},data-costkey=${purchaseFieldNames[3]},data-detailkey=${purchaseFieldNames[4]}" th:value="1" name="documentNum" th:id="documentNum" readonly/></td>
   </tr>
 </table>
-
 
 <h2>상세지출내역</h2>
 
@@ -71,9 +70,9 @@
 <table>
   <thead>
   <tr>
-    <th>항목</th>
-    <th>비용</th>
-    <th>비고</th>
+    <th><th:block th:text="${purchaseFieldNames[2]}"/></th>
+    <th><th:block th:text="${purchaseFieldNames[3]}"/></th>
+    <th><th:block th:text="${purchaseFieldNames[4]}"/></th>
   </tr>
   </thead>
   <tbody id="detailInput">
@@ -201,8 +200,11 @@
                 var addDetailVO = {  // categoryKey, costKey, detailKey 필드 만들기 -- 총금액 & 지출사유 필드 추가할 수 있게 만들기
                   approvalNum : insertedKey,
                   documentNum : $('#documentNum').val(),
+                  categoryKey : $('#documentNum').data('categorykey'),
                   category : $(this).children().children().eq(0).val(),
+                  costKey : $('#documentNum').data('costkey'),
                   cost : $(this).children().children().eq(1).val(),
+                  detailKey : $('#documentNum').data('detailkey'),
                   detail : $(this).children().children().eq(2).val(),
                 }
                 var jsonData1 = JSON.stringify(addDetailVO);

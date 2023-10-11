@@ -57,8 +57,15 @@
 
     <insert id="addDetail" parameterType="com.solution.appsolute.approval.dto.AddDetailVO">
         insert into approval_content_detail values
-            (null, #{approvalNum}, #{documentNum}, #{documentNum}, #{documentNum}) // VO 구성 잘못했내요...
+            (null, #{approvalNum}, #{documentNum}, #{documentNum}, #{documentNum})
     </insert>
+
+    <select id="purchaseFieldNames" resultType="String">
+        SELECT dd.field_name
+        FROM document d
+                 inner join document_detail dd ON d.document_num = dd.document_num
+        where d.document_num = 1
+    </select>
 
 
 

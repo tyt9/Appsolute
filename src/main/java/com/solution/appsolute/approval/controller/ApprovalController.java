@@ -21,8 +21,10 @@ public class ApprovalController {
     public void purchase1(Model model){
         model.addAttribute("deptList", approvalDao.deptList());
         model.addAttribute("empList", approvalDao.empList());
+        model.addAttribute("purchaseFieldNames", approvalDao.purchaseFieldNames());
 //        System.out.println(approvalDao.deptList());
 //        System.out.println(approvalDao.empList());
+        System.out.println(approvalDao.purchaseFieldNames().get(0));
     }
 
     @PostMapping("/purchaseSuccess")

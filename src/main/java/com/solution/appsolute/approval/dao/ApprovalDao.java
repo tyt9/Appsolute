@@ -15,4 +15,5 @@ public interface ApprovalDao {
     public void insertApp(Basic basic);
 
     public void addPerson(AddPersonVO addPersonVO);
+    public List<String> purchaseFieldNames();
 }

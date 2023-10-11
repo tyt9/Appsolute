@@ -10,7 +10,13 @@ import lombok.*;
 public class AddDetailVO {
     private long approvalNum;
     private int documentNum;
+    private String categoryKey;
     private String category;
+    private String costKey;
     private int cost;
+    private String detailKey;
     private String detail;
+
+
+
 }
