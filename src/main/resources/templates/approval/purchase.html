@@ -213,7 +213,8 @@
                 contentType: "application/json",
                 success: function (data) {
 
-
+                  var purchaseVOeachArray = [];
+                  var purchaseVOeachArrayList = [];
                   $('.trClass').each(function () {
                     // console.log($(this).children().children().eq(0).val());
                     // console.log($(this).children().children().eq(1).val());
@@ -237,9 +238,14 @@
                       fieldKey : $('#documentNum').data('detailkey'),
                       fieldValue : $(this).children().children().eq(2).val(),
                     }
-                    var purchaseVOeachArray = [purchaseVO11,purchaseVO22,purchaseVO33]
+                    purchaseVOeachArray.push(purchaseVO11)
+                    purchaseVOeachArray.push(purchaseVO22)
+                    purchaseVOeachArray.push(purchaseVO33)
+                    // purchaseVOeachArray = [purchaseVO11,purchaseVO22,purchaseVO33];
+                    purchaseVOeachArrayList.push(purchaseVOeachArray);
                     console.log(purchaseVOeachArray)
-
+                    console.log(purchaseVOeachArrayList)
+                  })
                     // var addDetailVO = {  // categoryKey, costKey, detailKey 필드 만들기 -- 총금액 & 지출사유 필드 추가할 수 있게 만들기
                     //   approvalNum : insertedKey,
                     //   documentNum : $('#documentNum').val(),
@@ -260,12 +266,15 @@
                       contentType: "application/json",
                       success: function (data) {
                         console.log(data);
+
+
+                        $('#pageForm').submit();
                       },
                       error: function() {
                         alert("Error occurred");
                       }
                     });
-                  })
+
 
 
 
@@ -278,7 +287,7 @@
                 }
               });
 
-              // $('#pageForm').submit();
+
             },
             error: function() {
               alert("Error occurred");

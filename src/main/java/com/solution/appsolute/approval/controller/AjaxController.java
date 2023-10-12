@@ -46,7 +46,18 @@ public class AjaxController {
 
     @RequestMapping(value = "/addDetail", method = RequestMethod.POST)
     public int addDetail(@RequestBody List<PurchaseVO> detailPurchaseArray){
+        int index = 0;
         System.out.println(detailPurchaseArray);
+        for (PurchaseVO purchaseVO : detailPurchaseArray) {
+            System.out.println(index);
+            System.out.println(purchaseVO+"---------"+index);
+            index++;
+//            purchaseVO.setFieldKey(purchaseVO.getFieldKey()+index);
+            approvalDao.addPurchaseDetail(purchaseVO);
+        }
+//        System.out.println("get(0) > "+detailPurchaseArray.get(0));
+//        System.out.println("get(1) > "+detailPurchaseArray.get(1));
+//        System.out.println("get(2) > "+detailPurchaseArray.get(2));
         return 0;
     }
 
