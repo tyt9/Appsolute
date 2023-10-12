@@ -30,6 +30,39 @@
         <result property="documentName" column="document_name"/>
     </resultMap>
 
+    <resultMap id="approvalResultMap" type="com.solution.appsolute.approval.dto.Approval">
+        <result property="approvalNum" column="approval_num"/>
+        <result property="appCheck" column="app_check"/>
+        <result property="approvalDate" column="approval_date"/>
+        <result property="appContent" column="app_content"/>
+        <result property="appDel" column="app_del"/>
+        <result property="appTitle" column="app_title"/>
+        <result property="documentNum" column="document_num"/>
+        <result property="empNum" column="emp_num"/>
+        <result property="lineNum" column="line_num"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="creationDate" column="creation_date"/>
+    </resultMap>
+
+    <resultMap id="approvalDetailResultMap" type="com.solution.appsolute.approval.dto.ApprovalDetail">
+        <result property="approvalDetailNum" column="approval_detail_num"/>
+        <result property="empCheckNum" column="emp_check_num"/>
+        <result property="appDetailSeq" column="app_detail_seq"/>
+        <result property="checkDate" column="check_date"/>
+        <result property="approvalLineNum" column="approval_line_num"/>
+        <result property="approvalNum" column="approval_num"/>
+        <result property="approvalStatus" column="approval_status"/>
+        <result property="rejectReason" column="reject_reason"/>
+    </resultMap>
+
+    <resultMap id="approvalContentOne" type="com.solution.appsolute.approval.dto.ApprovalContent">
+        <result property="appContentNum" column="app_content_num"/>
+        <result property="approvalNum" column="approval_num"/>
+        <result property="documentNum" column="document_num"/>
+        <result property="fieldKey" column="field_key"/>
+        <result property="fieldValue" column="field_value"/>
+    </resultMap>
+
     <select id="find" resultType="java.util.Map">
         select * from approval
     </select>
@@ -72,7 +105,17 @@
             (null, #{approvalNum}, #{documentNum}, #{fieldKey}, #{fieldValue})
     </insert>
 
+    <select id="approvalOne" resultMap="approvalResultMap" parameterType="int">
+        select * from approval where approval_num = #{param}
+    </select>
 
+    <select id="approvalDetailOne" resultMap="approvalDetailResultMap" parameterType="int">
+        select * from approval_detail where approval_num = #{param}
+    </select>
+
+<!--    <select id="approvalContentOne" resultMap="approvalContentResultMap" parameterType="int">-->
+<!--        select * from approval_content_detail where approval_num = #{param}-->
+<!--    </select>-->
 
 
 

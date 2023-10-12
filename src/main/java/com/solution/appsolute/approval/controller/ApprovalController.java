@@ -27,10 +27,20 @@ public class ApprovalController {
         System.out.println(approvalDao.purchaseFieldNames().get(0));
     }
 
+
+    @GetMapping("/purchaseSuccess")
+    public void purchasePost1(Model model) {
+        model.addAttribute("approvalOne", approvalDao.approvalOne(67));
+//        System.out.println(approvalDao.approvalOne(67));
+//        System.out.println("--------------"+expenseReport);
+    }
+
     @PostMapping("/purchaseSuccess")
     public void purchasePost(Model model, ExpenseReport expenseReport) {
-        model.addAttribute("expenseReport", expenseReport);
-//        System.out.println("--------------"+expenseReport);
+        model.addAttribute("approvalOne", approvalDao.approvalOne(67));
+        model.addAttribute("approvalDetailOne", approvalDao.approvalDetailOne(18));
+        System.out.println(approvalDao.approvalDetailOne(18));
+//        model.addAttribute("approvalContentOne", approvalDao.approvalContentOne(67));
     }
 
 }

@@ -7,31 +7,35 @@
 <body>
 <h1>지출결의서</h1>
 
+[[${approvalOne}]]<br>
+[[${approvalDetailOne}]]<br>
+[[${approvalContentOne}]]
+
 <table>
     <tr>
         <td>제목:</td>
-        <td><input type="text" th:field="${expenseReport.title}" /></td>
+        <td><input type="text" th:field="${approvalOne.appTitle}" /></td>
     </tr>
-    <tr>
-        <td>작성일자:</td>
-        <td><input type="text" th:field="${expenseReport.creationDate}" /></td>
-    </tr>
-    <tr>
-        <td>소속:</td>
-        <td><input type="text" th:field="${expenseReport.department}" /></td>
-    </tr>
-    <tr>
-        <td>작성자:</td>
-        <td><input type="text" th:field="${expenseReport.author}" /></td>
-    </tr>
-    <tr>
-        <td>총 금액:</td>
-        <td><input type="text" th:field="${expenseReport.totalAmount}" /></td>
-    </tr>
-    <tr>
-        <td>지출사유:</td>
-        <td><textarea th:field="${expenseReport.reason}" rows="4"></textarea></td>
-    </tr>
+<!--    <tr>-->
+<!--        <td>작성일자:</td>-->
+<!--        <td><input type="text" th:field="${approvalOne.creationDate}" /></td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <td>소속:</td>-->
+<!--        <td><input type="text" th:field="${approvalOne.department}" /></td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <td>작성자:</td>-->
+<!--        <td><input type="text" th:field="${approvalOne.author}" /></td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <td>총 금액:</td>-->
+<!--        <td><input type="text" th:field="${approvalOne.totalAmount}" /></td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <td>지출사유:</td>-->
+<!--        <td><textarea th:field="${approvalOne.reason}" rows="4"></textarea></td>-->
+<!--    </tr>-->
 </table>
 
 <h2>상세지출내역</h2>

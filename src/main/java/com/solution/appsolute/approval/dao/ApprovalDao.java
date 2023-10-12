@@ -18,4 +18,9 @@ public interface ApprovalDao {
     public List<String> purchaseFieldNames();
 
     public void addPurchaseDetail(PurchaseVO purchaseVO);
+    public Approval approvalOne(int approvalNum);
+
+    public List<ApprovalDetail> approvalDetailOne(int approvalNum);
+
+    public List<ApprovalContent> approvalContentOne(int approvalNum);
 }
