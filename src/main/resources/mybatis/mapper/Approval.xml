@@ -113,9 +113,9 @@
         select * from approval_detail where approval_num = #{param}
     </select>
 
-<!--    <select id="approvalContentOne" resultMap="approvalContentResultMap" parameterType="int">-->
-<!--        select * from approval_content_detail where approval_num = #{param}-->
-<!--    </select>-->
+    <select id="approvalContentOne" resultMap="approvalContentResultMap" parameterType="int">
+        select * from approval_content_detail where approval_num = #{param}
+    </select>
 
 
 

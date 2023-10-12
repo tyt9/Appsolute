@@ -1,7 +1,6 @@
 package com.solution.appsolute.approval.controller;
 
 import com.solution.appsolute.approval.dao.ApprovalDao;
-import com.solution.appsolute.approval.dto.Approval;
 import com.solution.appsolute.approval.dto.ExpenseReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +31,10 @@ public class ApprovalController {
     public void purchasePost1(Model model) {
         model.addAttribute("approvalOne", approvalDao.approvalOne(67));
 //        System.out.println(approvalDao.approvalOne(67));
+        model.addAttribute("approvalDetailOne", approvalDao.approvalDetailOne(13));
+        System.out.println("test > "+approvalDao.approvalDetailOne(13));
+//        model.addAttribute("approvalContentOne", approvalDao.approvalContentOne(13));
+        System.out.println("test 2 > "+approvalDao.approvalContentOne(13));
 //        System.out.println("--------------"+expenseReport);
     }
 
