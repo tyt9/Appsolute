@@ -5,12 +5,81 @@
     <title>지출결의서</title>
 </head>
 <body>
-<h1>지출결의서</h1>
+<h2>지출결의서</h2>
 
-[[${approvalOne}]]<br>
-[[${approvalDetailOne}]]<br>
+<h1>이 페이지는 아직 CSS 하지마세요!</h1>
+
+<!--[[${approvalOne}]]<br><br><br>-->
+<!--[[${approvalDetailOne}]]<br><br><br>-->
+<!--[[${approvalContentOne}]]<br><br>-->
 
 <table>
+    <th:block th:each="approvalDetail : ${approvalDetailOne}">
+<!--        <tr>-->
+<!--            <td>결재번호</td>-->
+<!--            <td th:text="${approvalDetail.approvalNum}"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td>결재 디테일 번호</td>-->
+<!--            <td th:text="${approvalDetail.approvalDetailNum}"></td>-->
+<!--        </tr>-->
+        <tr>
+            <td>결재 사원 번호</td>
+            <td th:text="${approvalDetail.empCheckNum}"></td>
+        </tr>
+        <tr>
+            <td>결재 시퀀스</td>
+            <td th:text="${approvalDetail.appDetailSeq}"></td>
+        </tr>
+<!--        <tr>-->
+<!--            <td>결재한 날짜</td>-->
+<!--            <td th:text="${approvalDetail.checkDate}"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td>결재 라인 번호</td>-->
+<!--            <td th:text="${approvalDetail.approvalLineNum}"></td>-->
+<!--        </tr>-->
+        <tr>
+            <td>결재 상태</td>
+            <td th:text="${approvalDetail.approvalStatus}"></td>
+        </tr>
+        <tr>
+            <td>반려 사유</td>
+            <td th:text="${approvalDetail.rejectReason}"></td>
+        </tr>
+    </th:block>
+    <tr>
+        <td>----------------------</td>
+    </tr>
+
+    <th:block th:each="approvalContent : ${approvalContentOne}">
+<!--        <tr>-->
+<!--            <td><h3>결재번호</h3></td>-->
+<!--            <td th:text="${approvalContent.approvalNum}"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td>결재 내용 번호</td>-->
+<!--            <td th:text="${approvalContent.appContentNum}"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td>문서 번호</td>-->
+<!--            <td th:text="${approvalContent.documentNum}"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td>키</td>-->
+<!--            <td th:text="${approvalContent.fieldKey}"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td>밸류</td>-->
+<!--            <td th:text="${approvalContent.fieldValue}"></td>-->
+<!--        </tr>-->
+        <tr>
+            <td th:text="${approvalContent.fieldKey}"></td>
+            <td th:text="${approvalContent.fieldValue}"></td>
+        </tr>
+
+    </th:block>
+
 <!--    <tr>-->
 <!--        <td>제목:</td>-->
 <!--        <td><input type="text" th:field="${approvalOne.appTitle}" /></td>-->

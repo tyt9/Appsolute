@@ -81,7 +81,6 @@
 </table>
 
   <p><input type="button" th:value="제출" id="pageSubmit"></p>
-  <p><input type="button" th:value="디테일제출" id="detailSubmit"></p>
 </form>
 <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
@@ -93,7 +92,7 @@
   var num = 1;
   var detailInput = $('#detailInput');
   $('#detailAddBtn').click(function (){
-    detailInput.append("  <tr class='trClass'>" + // $('.trClass').each 로 한줄씩 insert 해줍시다
+    detailInput.append("  <tr class='trClass'>" +
             "    <td>" +
             "      <select>" +
             "        <option value=\"물품구입비\">물품구입비</option>" +
@@ -114,17 +113,7 @@
     if($('.trClass').length > 1){
       $(this).closest("tr").remove();
     }
-
   });
-
-  // $('#pageSubmit').click(function (){
-  //   if (confirm("제출하시겠습니까?")) {
-  //     $('#pageForm').submit();
-  //   } else {
-  //     return false;
-  //   }
-  // });
-
 
   $('#deptPick').change(function (){
     $('.optionClass').css('display', 'none');
@@ -151,12 +140,11 @@
   });
 
   $(document).on("click", ".addPersonBtnClass", function(){
-    // console.log($(this).attr('id'));
     $(this).parent('div').remove();
   });
 
 
-  $(document).on("click", "#pageSubmit", function (){ // 클릭했을 때 새로 읽어오기 하게 바꾸기
+  $(document).on("click", "#pageSubmit", function (){
     if (confirm("제출하시겠습니까?")) {
       var insertedKey = 0;
       var basic = {
@@ -183,7 +171,7 @@
             console.log(empNoData);
           });
 
-          console.log("여기까지 오나요");
+          console.log("---------------------");
           $.ajax({
             data: JSON.stringify({ empNoData: empNoDataArray }),
             url: "/form/addPerson",
@@ -191,7 +179,6 @@
             contentType: "application/json",
             success: function (data) {
               console.log(data);
-              // location.href="/approval/purchaseSuccess";
               var purchaseVO1 = {
                 approvalNum : insertedKey,
                 documentNum : $('#documentNum').val(),
@@ -216,9 +203,6 @@
                   var purchaseVOeachArray = [];
                   var purchaseVOeachArrayList = [];
                   $('.trClass').each(function () {
-                    // console.log($(this).children().children().eq(0).val());
-                    // console.log($(this).children().children().eq(1).val());
-                    // console.log($(this).children().children().eq(2).val());
 
                     var purchaseVO11 = {
                       approvalNum : insertedKey,
@@ -241,12 +225,11 @@
                     purchaseVOeachArray.push(purchaseVO11)
                     purchaseVOeachArray.push(purchaseVO22)
                     purchaseVOeachArray.push(purchaseVO33)
-                    // purchaseVOeachArray = [purchaseVO11,purchaseVO22,purchaseVO33];
                     purchaseVOeachArrayList.push(purchaseVOeachArray);
                     console.log(purchaseVOeachArray)
                     console.log(purchaseVOeachArrayList)
                   })
-                    // var addDetailVO = {  // categoryKey, costKey, detailKey 필드 만들기 -- 총금액 & 지출사유 필드 추가할 수 있게 만들기
+                    // var addDetailVO = {
                     //   approvalNum : insertedKey,
                     //   documentNum : $('#documentNum').val(),
                     //   categoryKey : $('#documentNum').data('categorykey'),
@@ -257,7 +240,6 @@
                     //   detail : $(this).children().children().eq(2).val(),
                     // }
                     var jsonData1 = JSON.stringify(purchaseVOeachArray);
-                    // console.log(addDetailVO);
 
                     $.ajax({
                       data: jsonData1,
@@ -265,38 +247,25 @@
                       type: "POST",
                       contentType: "application/json",
                       success: function (data) {
-                        console.log(data);
-
-
                         $('#pageForm').submit();
                       },
                       error: function() {
-                        alert("Error occurred");
+                        alert("4 Error occurred");
                       }
                     });
-
-
-
-
-
-
-
                 },
                 error: function() {
-                  alert("add purchase Error occurred");
+                  alert("3 add purchase Error occurred");
                 }
               });
-
-
             },
             error: function() {
-              alert("Error occurred");
+              alert("2 Error occurred");
             }
           });
-
         },
         error: function() {
-          alert("Error occurred");
+          alert("1 Error occurred");
         }
       });
     } else {

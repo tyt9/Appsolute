@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button><a th:href="@{/admin/employee/employeeList}">사원관리</a></button>
+<button><a th:href="@{/admin/dept/deptList}">부서관리</a></button>
+<button><a th:href="@{/admin/annual/annualList}">휴가관리</a></button>
+
+<div id="content">
+
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#employeeListButton").click(function() {
+            $.ajax({
+                url: '/admin/employee/employeeList',
+                type: 'GET',
+                success: function(data) {
+                    $("#content").html(data);
+                },
+            });
+        });
+    });
+    $(document).ready(function() {
+        $("#employeeDePtListButton").click(function() {
+            $.ajax({
+                url: '/admin/dept/deptList',
+                type: 'GET',
+                success: function(data) {
+                    $("#content").html(data);
+                },
+            });
+        });
+    });
+</script>
+</body>
+</html>

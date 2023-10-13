@@ -26,9 +26,7 @@
     </select>
 
     <select id="unreadDao" resultType="java.util.Map">
-        select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, mail_Date
-        from mail m inner join employee e on m.mail_receiver = e.emp_num where mail_sender = #{param1} and mail_check = 0
-        union
+
         select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, mail_Date
         from mail m inner join employee e on m.mail_sender = e.emp_num where mail_receiver = #{param1} and mail_check = 0
         order by mail_num desc limit #{param2}, #{param3};
@@ -38,12 +36,12 @@
         SELECT COUNT(*) as total_count
         FROM (
                  select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, mail_Date
-                 from mail m inner join employee e on m.mail_receiver = e.emp_num where mail_sender = #{param1} and mail_check = 0
-                 union
-                 select m.mail_num, m.mail_check, m.mail_sender, m.mail_receiver, e.emp_name, mail_title, mail_content, mail_Date
                  from mail m inner join employee e on m.mail_sender = e.emp_num where mail_receiver = #{param1} and mail_check = 0
-                 order by mail_num desc limit #{param2}, #{param3}
+
              ) AS combined_result;
     </select>
+    <delete id="deleteById">
+        delete from mail where mail_Num = #{param1};
+    </delete>
 
 </mapper>

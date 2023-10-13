@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
+
+<head>
+    <title>공 지 사 항</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #212529;
+            padding: 10px 0 10px 220px;
+            text-align: center;
+        }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="static/css/headers.css" rel="stylesheet">
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/bootstrap.bundle.js"></script>
+    <script src="js/bootstrap.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container" style="margin-left: 20%">
+        <table class="table table-hover">
+            <br><br><br><br><br>
+            <div>
+                <h3 style="font-weight: bold;">공지사항</h3>
+            </div>
+            <div class="form-inline d-flex justify-content-end" style="width: 100%;">
+                <form method="GET" th:action="@{/board/boardList}" th:value="${param.searchText}">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="searchText" class="sr-only">검색</label>
+                        <input type="text" class="form-control" id="searchText" name="searchText" style="width: 100%;">
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2 float-right">검색</button>
+                </form>
+            </div>
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>날짜</th>
+                <th>조회수</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="board : ${boards}">
+                <td th:text="${board.id}"></td>
+                <td><a th:href="@{'/board/boardContent/' + ${board.id}}"><span th:text="${board.title}"></span></a></td>
+                <td th:text="${board.createdBy}"></td>
+                <td th:text="${board.createdDate}"></td>
+                <td th:text="${board.countVisit}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <hr/>
+        <div class="btn-group" style="float: right;">
+            <button type="button" class="btn btn-primary mb-2" onclick="location.href='/board/boardForm'">공지작성</button>
+        </div>
+        <div class="center text-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justifiy-content-center" th:if="${totalPage != 0}">
+                    <li class="page-item"><a class="page-link" th:href="@{/board/boardList(page=${boards.pageable.pageNumber - 1}, searchText=${param.searchText})}">이전페이지</a></li>
+                    <li class="" style="margin-left:5%;" th:classappend="${page == boards.pageable.pageNumber + 1} ? 'disabled'" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                        <a th:href="@{/board/boardList(page=${page - 1}, searchText=${param.searchText})}" th:text="${page}"></a>
+                    </li>
+                    <li class="page-item" style="margin-left:6%;"><a class="page-link" th:href="@{/board/boardList(page=${boards.pageable.pageNumber + 1}, searchText=${param.searchText})}">다음페이지</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<div  class="text-center">
+    <ul class="pagination">
+    </ul>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="/assets/demo/chart-area-demo.js"></script>
+<script src="/assets/demo/chart-bar-demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="/js/datatables-simple-demo.js"></script>
+<script src="/js/logout.js"></script>
+<script src="static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

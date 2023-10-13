@@ -30,14 +30,14 @@ public class Employee {
     @Column(length = 50, nullable = false)
     private String empPhone;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String empEmail;
 
     @Column(length = 50, nullable = false)
     private String empPassword;
 
     @Column(nullable = true)
-    private LocalDate empHireDate;
+    private LocalDateTime empHireDate;
 
     @Column(length = 20, nullable = false)
     private String empPosition;
@@ -47,6 +47,9 @@ public class Employee {
 
     @Column
     private int empMgr;
+
+    @Column(columnDefinition = "int default 0")
+    private double empAnnual;
 
     public void changeEmpName(String empName){
         this.empName = empName;
@@ -62,29 +65,29 @@ public class Employee {
 
     public void changeEmpMgr(int empMgr) {this.empMgr = empMgr;}
 
-//    @OneToMany(mappedBy = "employee") // 주인 필드 명
-//    private List<Board> boardList = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "employee")
-//    private List<BoardComment> boardCommentList = new ArrayList<>();
-//
-//    @Builder
-//    public Employee(String empName, Long deptNo, String empPhone, String empEmail, String empPassword, LocalDate empHireDate, String empPosition, int empLeader, int empMgr, List<Board> boardList, List<BoardComment> boardCommentList) {
-//        this.empName = empName;
-//        this.deptNo = deptNo;
-//        this.empPhone = empPhone;
-//        this.empEmail = empEmail;
-//        this.empPassword = empPassword;
-//        this.empHireDate = empHireDate;
-//        this.empPosition = empPosition;
-//        this.empLeader = empLeader;
-//        this.empMgr = empMgr;
-//        this.boardList = boardList;
-//        this.boardCommentList = boardCommentList;
-//    }
-//
-//    public Employee update(String empName){
-//        this.empName = empName;
-//        return this;
-//    }
+    @OneToMany(mappedBy = "employee") // 주인 필드 명
+    private List<Board> boardList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employee")
+    private List<BoardComment> boardCommentList = new ArrayList<>();
+
+    @Builder
+    public Employee(String empName, Long deptNo, String empPhone, String empEmail, String empPassword, LocalDateTime empHireDate, String empPosition, int empLeader, int empMgr, List<Board> boardList, List<BoardComment> boardCommentList) {
+        this.empName = empName;
+        this.deptNo = deptNo;
+        this.empPhone = empPhone;
+        this.empEmail = empEmail;
+        this.empPassword = empPassword;
+        this.empHireDate = empHireDate;
+        this.empPosition = empPosition;
+        this.empLeader = empLeader;
+        this.empMgr = empMgr;
+        this.boardList = boardList;
+        this.boardCommentList = boardCommentList;
+    }
+
+    public Employee update(String empName){
+        this.empName = empName;
+        return this;
+    }
 }

@@ -1,29 +1,239 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>보낸 메일함</h1>
-<hr>
-<a href="/mail">전체 메일함</a>
-<a href="/mail/send">보낸 메일함</a>
-<a href="/mail/receive">받은 메일함</a>
-<a href="/mail/unread">안 읽은 메일함</a>
-<a href="/mail/write">메일 작성</a>
-<hr>
+    <meta charset="utf-8" />
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css">-->
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">-->
+    <!--    <link href="css/bootstrap.css" rel="stylesheet">-->
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
 
-<table border="1">
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .mail-links a {
+
+            padding: 10px 30px;
+            text-decoration: none;
+        }
+
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #212529;
+            padding: 10px 0 10px 220px;
+            text-align: center;
+        }
+        .mail-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .mail-table th, .mail-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Style table header */
+        .mail-table th {
+            background-color: #f2f2f2;
+        }
+
+        /* Style alternating rows */
+        .mail-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Style checkboxes */
+        .chBox {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Style links */
+        .mail-link {
+            text-decoration: none;
+            color: #007BFF; /* Blue color, you can change it */
+            font-weight: bold;
+        }
+
+        /* Center align the "게시글이 없습니다." row */
+        .no-articles {
+            text-align: center;
+        }
+
+        /* Pagination links */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+        }
+
+        .pagination li {
+            margin: 5px;
+        }
+
+        .mail-table tbody tr:hover {
+            background-color: #54dcf2; /* 원하는 배경색 지정 */
+        }
+    </style>
+    <!-- Custom styles for this template -->
+
+    <link href="static/css/headers.css" rel="stylesheet">
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/bootstrap.bundle.js"></script>
+    <script src="js/bootstrap.js"></script>
+</head>
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="/login/mypage">Start Bootstrap</a>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <!--                <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">-->
+    <!--                    <div class="input-group">-->
+    <!--                        <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />-->
+    <!--                        <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>-->
+    <!--                    </div>-->
+    <!--                </form>-->
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">비밀번호 변경</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item"  onclick="confirmLogout()">로그아웃</a></li >
+            </ul>
+        </li>
+    </ul>
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Approval</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                        <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                        전자결재
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                결재 올리기
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="login.html">결재1</a>
+                                    <a class="nav-link" href="register.html">결재2</a>
+                                    <a class="nav-link" href="password.html">결재3</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                결재 서류
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="401.html">확인된거</a>
+                                    <a class="nav-link" href="404.html">안된거</a>
+                                    <a class="nav-link" href="500.html">내가 올린 결재</a>
+                                </nav>
+                            </div>
+                        </nav>
+                    </div>
+
+                    <div class="sb-sidenav-menu-heading">Mail</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        메일
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="/mail">전체 메일함</a>
+                            <a class="nav-link" href="/mail/send">보낸 메일함</a>
+                            <a class="nav-link" href="/mail/receive">받은 메일함</a>
+                            <a class="nav-link" href="/mail/unread">읽지 않은 메일함</a>
+                            <a class="nav-link" href="/mail/write">메일 작성</a>
+                        </nav>
+                    </div>
+
+                    <div class="sb-sidenav-menu-heading">notification </div>
+                    <a class="nav-link" href="/board/boardList">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                        공지사항
+                    </a>
+                    <a class="nav-link" href="">
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        Tables
+                    </a>
+
+
+        </nav>
+    </div>
+
+    <div class="container" style="margin-left: 20%; margin-top: 7%">
+    <h1 class="centered-text">보낸 메일함</h1><br>
+
+    <div class="mail-links">
+        <a href="/mail">
+            <button class="btn btn-primary" onclick="window.location.href='/mail'">전체 메일함</button>
+        </a>
+        <a href="/mail/send">
+            <button class="btn btn-primary" onclick="window.location.href='/mail/send'">보낸 메일함</button>
+        </a>
+        <a href="/mail/receive">
+            <button class="btn btn-primary" onclick="window.location.href='/mail/receive'">받은 메일함</button>
+        </a>
+        <a href="/mail/unread">
+            <button class="btn btn-primary" onclick="window.location.href='/mail/unread'">안 읽은 메일함</button>
+        </a>
+        <a href="/mail/write">
+            <button class="btn btn-primary" onclick="window.location.href='/mail/write'">메일 작성</button>
+        </a>
+    </div>
+
+        <hr>
+
+<form name="list" action="mail/delete">
+    <div class="delBtn">
+        <button type="button" class="selectDelete_btn">삭제</button>
+    </div>
+    <br><table class="mail-table table-hover" border="1">
     <tr>
-        <th>메일 번호</th>
+        <th><input type="checkbox" name="allcheck" onclick="allCheck()"></th>
         <th>메일 제목</th>
         <th>받는 사람</th>
         <th>작성 시간</th>
     </tr>
     <tr th:each="dto : ${list}">
         <td>
-            [[${dto.mailNum}]]
+            <input class="chBox" type="checkbox" name="rowcheck" th:value="${dto.mailNum}">
         </td>
         <td>
             <a th:href="@{/mail/read/{mailNum}(mailNum = ${dto.mailNum})}">
@@ -34,6 +244,7 @@
             [[${dto.empName}]]
         </td>
         <td>[[${dto.mailDate}]]</td>
+
     </tr>
     <tr>
         <td colspan="4">
@@ -44,6 +255,96 @@
         </td>
     </tr>
 </table>
+</form>
+<script type="text/javascript">
+    function allCheck(){
+        var ac = document.list.allcheck;
+        var rc = document.list.rowcheck;
+
+        if (ac.checked == true) {
+            for (i=0; i < rc.length; i++) {
+                rc[i].checked = true;
+            }
+        } else {
+            for (i=0; i<rc.length; i++) {
+                rc[i].checked = false;
+            }
+        }
+    }
+
+    function goToDelete(){
+        var rc = document.list.rowcheck;
+
+        flag = false;
+
+        for (i = 0; i < rc.length; i++) {
+            if(rc[i].checked) {
+                flag = true;
+            }
+        }
+
+        if (flag == false) {
+            alert("하나 이상 선택되어야 삭제가 가능합니다.");
+            return;
+        }
+
+        document.list.submit();
+    }
+
+    $(".selectDelete_btn").click(function (){
+        var confirm_val = confirm("정말 삭제하시겠습니까?");
+
+        if(confirm_val) {
+            var checkArr = new Array();
+
+            $("input[class='chBox']:checked").each(function(){
+                checkArr.push($(this).attr("value"));
+            });
+
+            $.ajax({
+                url : "/mail/delete",
+                type : "POST",
+                data : {chbox : checkArr},
+                success : function (result){
+                    if (result==1) {
+                        location.href = "/mail";
+                    } else {
+                        alert("삭제 실패");
+                    }
+
+                }
+            });
+        }
+    });
+</script>
+
+    </div>
+</div>
+
+<div class="fixed-footer">
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                <div>
+                    <a href="#">Privacy Policy</a>
+                    &middot;
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="/assets/demo/chart-area-demo.js"></script>
+<script src="/assets/demo/chart-bar-demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="/js/datatables-simple-demo.js"></script>
+<script src="/js/logout.js"></script>
+<script src="static/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    ul{
+        list-style: none;
+    }
+    li {
+        float: left;
+    }
+</style>
+<body>
+<h1>부서 정보</h1>
+
+<table border="1" th:object="${deptInfo}">
+    <tbody><tr>
+        <td>부서 번호</td>
+        <td>부서 이름</td>
+        <td>부서 위치</td>
+        <td>부서 분류</td>
+        <td>사원 수</td>
+    </tr>
+    <tr>
+        <td th:text="*{deptNo}" id="deptNo" name="deptNo"></td>
+        <td th:text="*{deptName}"></td>
+        <td th:text="*{deptLoc}"></td>
+        <td th:text="*{deptBranch}"></td>
+        <td th:text="${count}" id="countEmployee"></td>
+    </tr>
+    </tbody></table>
+<button><a th:href="@{/admin/dept/deptInfoModify/{deptNo}(deptNo=${deptNo})}">정보 수정</a></button>
+<button onclick="deleteDept()">부서 삭제</button>
+<hr>
+<h1>회원정보</h1>
+
+<table border="1">
+    <tbody><tr>
+        <th>사원 번호</th>
+        <th>사원 이름</th>
+        <th>사원 전화번호</th>
+        <th>입사일</th>
+        <th>직책</th>
+    </tr>
+    <tr th:each="emp :${empListInDeptNo.dtoList}">
+        <td th:text="${emp.empNum}"></td>
+        <td th:text="${emp.empName}"></td>
+        <td th:text="${emp.empPhone}"></td>
+        <td th:text="${emp.empHireDate}"></td>
+        <td th:text="${emp.empPosition}"></td>
+    </tr>
+    </tbody></table>
+<div th:if="${not #lists.isEmpty(empListInDeptNo.dtoList)}">
+    <ul>
+        <li th:if="${empListInDeptNo.prev}">
+            <a th:href="@{/admin/dept/deptInfo/{deptNo}(deptNo=${deptInfo.deptNo}, page=${empListInDeptNo.start - 1}}" tabindex="-1">Previous</a>
+        </li>
+        <li th:class="'page-item' + ${empListInDeptNo.page == page?' active' : ''}" th:each="page : ${empListInDeptNo.pageList}">
+            <a th:href="@{/admin/dept/deptInfo/{deptNo}(deptNo=${deptInfo.deptNo}, page=${page})}">
+                [[${page}]]
+            </a>
+        </li>
+        <li th:if="${empListInDeptNo.next}">
+            <a th:href="@{/admin/dept/deptInfo/{deptNo}(deptNo=${deptInfo.deptNo}, page=${empListInDeptNo.end + 1})}">Next</a>
+        </li>
+    </ul>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function deleteDept() {
+        const countEmployee = document.getElementById('countEmployee').textContent;
+        const deptNo = document.getElementById('deptNo').textContent;
+        if (countEmployee !== '0') {
+            alert("부서 내 사원이 존재해 삭제할 수 없습니다.")
+            return false;
+        } else {
+            if (confirm("삭제 처리?")) {
+                $.ajax({
+                    url: '/admin/dept/deleteDept',
+                    type: 'POST',
+                    data: {deptNo: deptNo},
+                    success: function (data) {
+                        if (data) {
+                            alert("삭제 완료");
+                            window.location.href = '/admin/dept/deptList';
+                        }
+                    },
+                });
+            } else {
+                return false;
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

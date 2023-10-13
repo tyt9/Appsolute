@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원별 정보수정</title>
+</head>
+<body>
+<table border="1">
+        <form th:action="@{'/admin/employee/employeeInfoModify/' + ${empNum}}" method="post" th:object="${employeeInfo}">
+        <tr>
+            <td>사원 번호</td>
+            <td><input type="hidden"  th:value="*{empNum}">[[${employeeInfo.empNum}]]</td>
+        </tr>
+        <tr>
+            <td>사원 이름</td>
+            <td><input type="text" name="empName" th:value="*{empName}"></td>
+        </tr>
+        <tr>
+            <td>부서 번호</td>
+            <td><input type="hidden" th:value="*{deptNo}">[[${employeeInfo.deptNo}]]</td>
+        </tr>
+        <tr>
+            <td>전화번호</td>
+            <td><input type="text" name="empPhone" th:value="*{empPhone}" id="empPhone"></td>
+        </tr>
+        <tr>
+            <td>입사일</td>
+            <td><input type="hidden" th:value="*{empHireDate}">[[${#temporals.format(employeeInfo.empHireDate, 'yyyy-MM-dd')}]]</td>
+        </tr>
+        <tr>
+            <td>직책</td>
+            <td><input type="hidden" th:value="*{empPosition}">[[${employeeInfo.empPosition}]]</td>
+        </tr>
+        <input type="submit" th:value="수정하기"/>
+    </form>
+
+</table>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function PhoneConfirm(inputElement) {
+        let phoneNumber = inputElement.value;
+        if (!/^[0-9]+$/.test(phoneNumber)) {
+            alert('전화번호는 숫자로만 입력해주세요.');
+        }
+    }
+
+    document.getElementById('empPhone').addEventListener('blur', function () {
+    let empPhone = document.getElementById('empPhone');
+        if(!PhoneConfirm(this)){
+            inputElement.value='';
+            empPhone.focus();
+        }
+    });
+</script>
+</body>
+</html>

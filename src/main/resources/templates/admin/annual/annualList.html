@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        ul{
+            list-style: none;
+        }
+        li {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<form action = "/admin/annual/annualList" method="get" id="searchForm">
+    <input type="hidden" name="page" value="1">
+    <select name="type" id="selectType">
+        <option value="empName" th:selected="${pageRequestDto.type == 'empName'}">사원 이름</option>
+        <option value="empNum" th:selected="${pageRequestDto.type == 'empNum'}">사원 번호</option>
+        <option value="empHireDate" th:selected="${pageRequestDto.type == 'empHireDate'}">입사일</option>
+    </select>
+    <input type="text" id="textInput" name="keyword" th:value="${pageRequestDto.keyword}" placeholder="검색어를 입력하세요">
+    <input type="date" id="dateInput" name="HireDate" max="2077-06-20" min="1950-01-01">
+    <button class="btn-search" type="button">검색</button>
+</form>
+<button class="updateBtn" type="button" onclick="updateSelectedEmployees()">연차 갱신</button>
+<table>
+    <tr>
+        <th><input type="checkbox" id="checkAll" onclick="checkAll()"></th>
+        <th>사원 번호</th>
+        <th>사원 이름</th>
+        <th>사원 부서</th>
+        <th>입사일</th>
+        <th>연차 갯수</th>
+    </tr>
+    <tr th:each="annual : ${annualList.dtoList}">
+        <td><input type="checkbox" class="checkbox" id="checkUpdate" th:value="${annual.empNum}"></td>
+        <td th:text="${annual.empNum}"></td>
+        <td th:text="${annual.empName}"></td>
+        <td th:text="${annual.deptNo}"></td>
+        <td th:text="${#temporals.format(annual.empHireDate, 'yyyy-MM-dd')}"></td>
+        <td th:text="${annual.empAnnual}"></td>
+    </tr>
+</table>
+<div>
+    <ul>
+        <li th:if="${annualList.prev}">
+            <a th:href="@{/admin/annual/annualList(page = ${annualList.start -1}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword}, hireDate=${pageRequestDto.hireDate})}" tabindex="-1">Previous</a>
+        </li>
+        <li th:class="'page-item' + ${annualList.page == page?'active' : ''}" th:each="page:${annualList.pageList}">
+            <a th:href="@{/admin/annual/annualList(page=${page}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword}, hireDate=${pageRequestDto.hireDate})}">
+                [[${page}]]
+            </a>
+        </li>
+        <li th:if="${annualList.next}">
+            <a th:href="@{/admin/annual/annualList(page=${employeeList.end + 1}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword}, hireDate=${pageRequestDto.hireDate})}">Next</a>
+        </li>
+    </ul>
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.getElementById('dateInput').value = new Date().toISOString().substring(0, 10);
+
+    var searchForm = $("#searchForm");
+    $('.btn-search').click(function (e) {
+        searchForm.submit();
+    });
+
+    var typeSelect = document.querySelector('select[name="type"]');
+    var dateInput = document.getElementById('dateInput');
+    var textInput = document.getElementById('textInput');
+
+    changeInputType();
+
+    typeSelect.addEventListener('change', function () {
+        changeInputType();
+    });
+
+    function changeInputType() {
+        if (typeSelect.value === 'empHireDate') {
+            dateInput.style.display = 'block';
+            textInput.style.display = 'none';
+        } else {
+            dateInput.style.display = 'none';
+            textInput.style.display = 'block';
+        }
+    }
+
+    $(document).ready(function() {
+        $("#checkAll").click(function() {
+            if($("#checkAll").is(":checked")) $("input[id=checkUpdate]").prop("checked", true);
+            else $("input[id=checkUpdate]").prop("checked", false);
+        });
+
+        $("input[id=checkUpdate]").click(function() {
+            var total = $("input[id=checkUpdate]").length;
+            var checked = $("input[id=checkUpdate]:checked").length;
+
+            if(total != checked) $("#checkAll").prop("checked", false);
+            else $("#checkAll").prop("checked", true);
+        });
+    });
+
+    function updateSelectedEmployees() {
+        var empNums = [];
+        $("input[id=checkUpdate]:checked").each(function() {
+            empNums.push($(this).val());
+        });
+
+        if (empNums.length > 0) {
+            $.ajax({
+                type: "POST",
+                url: "/admin/annual/annualUpdate",
+                data: JSON.stringify(empNums),
+                contentType: "application/json",
+                success: function(response) {
+                    alert("연차가 갱신되었습니다.");
+                    window.location.href = "/admin/annual/annualList";
+                },
+                error: function(error) {
+                    alert("연차 갱신 중 오류가 발생했습니다.");
+                }
+            });
+        } else {
+            alert("업데이트할 항목을 선택하세요.");
+        }
+    }
+</script>
+</html>
+

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>관리자가 회원가입</h1>
+<form action="/admin/employee/register" method="post">
+    <table>
+        <tr>
+            <td>이름</td>
+            <td><input type="text" name="empName"></td>
+        </tr>
+        <tr>
+            <td>핸드폰 번호</td>
+            <td><input type="text" name="empPhone" id="empPhone"></td>
+        </tr>
+        <tr>
+            <td>비밀번호</td>
+            <td><input type="text" name="empPassword" id="empPassword"></td>
+        </tr>
+        <tr>
+            <td>부서</td>
+            <td>
+                <select name="deptNo" id="deptNoSelect">
+                    <option value="">선택</option>
+                    <th:block th:each="deptInfo : ${deptNameList}">
+                        <option th:value="${deptInfo[0]}" th:text="${deptInfo[1]}"></option>
+                    </th:block>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>직책</td>
+            <td>
+                <select name="empPosition" id="empPosition">
+                    <option value="0">선택</option>
+                    <option th:value="사원" th:text="사원"></option>
+                    <option th:value="대리" th:text="대리"></option>
+                    <option th:value="팀장" th:text="팀장"></option>
+                    <option th:value="과장" th:text="과장"></option>
+                    <option th:value="차장" th:text="차장"></option>
+                    <option th:value="부장" th:text="부장"></option>
+                    <option th:value="전무" th:text="전무"></option>
+                    <option th:value="대표" th:text="대표"></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>팀장</td>
+            <td><input type="text" id="empLeader" name="empLeader"></td>
+        </tr>
+    </table>
+    <input type="submit" value="가입">
+</form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    //비밀번호 자동 생성(핸드폰 번호 뒷자리로)
+    document.getElementById('empPhone').addEventListener('input', function () {
+        let empPhone = this.value;
+        let empPassword = empPhone.slice(-4);
+        document.getElementById('empPassword').value = empPassword;
+    });
+
+    document.getElementById('empPosition').addEventListener('input', function () {
+        let selectEmpPosition = this.value;
+        let empLeader = document.getElementById('empLeader');
+
+        if (selectEmpPosition === '팀장') {
+            empLeader.value = 1;
+        } else {
+            empLeader.value = 0;
+        }
+    });
+
+
+    function PhoneConfirm(inputElement) {
+        let phoneNumber = inputElement.value;
+        let password = document.getElementById('empPassword');
+        if (!/^[0-9]+$/.test(phoneNumber)) {
+            alert('전화번호는 숫자로만 입력해주세요.');
+            password.value = '';
+
+        }
+    }
+
+    document.getElementById('empPhone').addEventListener('blur', function () {
+        let empPhone = document.getElementById('empPhone');
+       if(!PhoneConfirm(this)){
+           inputElement.value='';
+           empPhone.focus();
+       }
+    });
+
+
+        //부서선택하면 부서에 있는 팀장 / 부서 사람들 불러오기 (부서 저장은 Long으로, 보이는건 String)
+    // document.getElementById('deptNoSelect').addEventListener('change', function (){
+    //     let selectDeptNo = this.value;
+    //     let empLeaderSelect = document.getElementById('empLeaderSelect');
+    //     empLeaderSelect.innerHTML="";
+    //     let empMgrSelect = document.getElementById('empMgrSelect')
+    //     empMgrSelect.innerHTML="";
+    //
+    //     $.ajax({
+    //         url: '/admin/employee/getTeamLeaders',
+    //         type: 'GET',
+    //         data: {deptNo: selectDeptNo},
+    //         success: function (data) {
+    //             let leaderSelect = document.getElementById('empLeaderSelect');
+    //             leaderSelect.innerHTML = '<option value=0>선택</option>';
+    //             data.forEach(function (leader) {
+    //                 let option = document.createElement('option');
+    //                 option.value = leader[0];
+    //                 option.text = leader[1] + ' (' + leader[0] + ')';
+    //                 leaderSelect.appendChild(option);
+    //             });
+    //         },
+    //     });
+    //
+    //     $.ajax({
+    //         url: '/admin/employee/getMgr',
+    //         type: 'GET',
+    //         data: {deptNo: selectDeptNo},
+    //         success: function (data) {
+    //             let mgrSelect = document.getElementById('empMgrSelect');
+    //             mgrSelect.innerHTML = '<option value=0>선택</option>';
+    //             data.forEach(function (mgr) {
+    //                 let option = document.createElement('option');
+    //                 option.value = mgr[0];
+    //                 option.text =mgr[1] + ' (' +  mgr[0] + ')';
+    //                 mgrSelect.appendChild(option);
+    //             });
+    //         },
+    //     });
+    //
+    //
+    // });
+
+
+    document.querySelector('input[type="submit"]').addEventListener('click', function (event) {
+        if (confirm('가입?')) {
+            alert('완료');
+            return true;
+        } else {
+            alert('취소');
+            return false;
+        }
+
+    });
+
+
+</script>
+</body>
+</html>

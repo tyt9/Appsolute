@@ -1,14 +1,15 @@
 package com.solution.appsolute.approval.controller;
 
 import com.solution.appsolute.approval.dao.ApprovalDao;
-import com.solution.appsolute.approval.dto.AddDetailVO;
 import com.solution.appsolute.approval.dto.AddPersonVO;
 import com.solution.appsolute.approval.dto.Basic;
 import com.solution.appsolute.approval.dto.PurchaseVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

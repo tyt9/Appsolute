@@ -3,7 +3,9 @@ package com.solution.appsolute.mail.controller;
 
 import com.solution.appsolute.admin.dao.repository.AdminEmployee;
 import com.solution.appsolute.admin.dao.repository.AdminEmployeeRepository;
+import com.solution.appsolute.entity.Mail;
 import com.solution.appsolute.login.dto.AuthInfo;
+import com.solution.appsolute.mail.dao.mapper.MailMapper;
 import com.solution.appsolute.mail.dto.*;
 import com.solution.appsolute.mail.dao.repository.MailRepository;
 
@@ -21,12 +23,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+@RequestMapping
 @Controller
 @Slf4j
 public class MailController {
 
 //    @PersistenceContext
 //    EntityManager em;
+
+    @Autowired
+    MailMapper mailMapper;
 
     @Autowired
     MailService mailService;
@@ -41,9 +47,10 @@ public class MailController {
     AdminEmployeeRepository adminEmployeeRepository;
 
     @GetMapping("/test")
-    public String test(Model model){
-//        model.addAttribute("list", mailDao.listDao(1L, 1L));
-        model.addAttribute("list", mailRepository.list(1L, 1L));
+    public String test(Model model, HttpSession session){
+        AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo"); // 김승석 - authInfo에 세션 주입
+       int total = mailMapper.countUnreadDao(authInfo.getEmp_num());
+        model.addAttribute("total", total);
         return "list";
     }
 
@@ -113,7 +120,7 @@ public class MailController {
         AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo"); // 김승석 - authInfo에 세션 주입
         MailPage mailpage = mailService.getUnreadMailPage(authInfo.getEmp_num(), pageNo);
         model.addAttribute("list", mailpage); // 세션 아이디값으로 받기 (나중에 service로 추가해야 함!)
-        System.out.println("===========================" + mailpage);
+
         return "mail/mailUnread";
     }
 
@@ -121,7 +128,8 @@ public class MailController {
     public String readMail(HttpServletRequest req, Model model, @PathVariable Long mailNum, HttpSession session){
         AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo"); // 김승석 - authInfo에 세션 주입
         try{
-            MailListRequest request = mailService.getMail(authInfo.getEmp_num(), mailNum, true);
+
+            MailListRequest request = mailService.getMail(authInfo.getEmp_num(), mailNum);
             model.addAttribute("list", request);
             return "mail/mailRead";
         } catch (MailNotFoundException e){
@@ -142,17 +150,48 @@ public class MailController {
         return getEmpInfo;
     }
 
-    @ResponseBody
+
     @PostMapping(value = "/mail/write")
     public String mailPost(writeMailDto writeMailDto, HttpSession session) {
         AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
         mailService.mailSend(authInfo.getEmp_num(), writeMailDto);
-        return "redirect:/mail/mailList";
+        return "redirect:/mail";
     }
 
     @GetMapping("/mail/delete/{no}")
-    public String mailDelete(Model model, @PathVariable Long no ){
+    public String mailDelete(@PathVariable Long no ){
         mailRepository.deleteById(no);
         return"redirect:/mail";
+    }
+
+    @GetMapping("/mail/change/{no}")
+    public String mailChangeStatus(@PathVariable Long no) {
+        mailRepository.updateById(no);
+        String url = "redirect:/mail/read/" + no;
+        return url;
+    }
+
+    @ResponseBody
+    @PostMapping("/mail/change")
+    public int mailChange(@RequestParam(value = "num") Long no){
+        int result = 0;
+
+        mailRepository.updateById(no);
+        result = 1;
+        return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/mail/delete")
+    public int mailCheckDel(@RequestParam(value = "chbox[]") List<String> chArr ) {
+        int result = 0;
+        int num = 0;
+
+        for(String i : chArr){
+            num = Integer.parseInt(i);
+            mailMapper.deleteById(num);
+        }
+        result = 1;
+        return result;
     }
 }

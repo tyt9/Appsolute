@@ -16,7 +16,7 @@ import java.util.List;
 public class MailService {
 
     @Autowired
-    private MailMapper mailDao; // 마이바티스
+    private MailMapper mailMapper; // 마이바티스
 
     @Autowired
     private MailRepository mailRepository; // jpa
@@ -25,27 +25,29 @@ public class MailService {
 
     // 페이지 끊어서 가져오는 메소드(전체 메일)
     public MailPage getMailPage(Long id, int pageNum) {
-        int total = mailDao.countDao(id, (pageNum - 1) * size, size);
-        List<MailList> content = mailDao.listDao(id, (pageNum - 1) * size, size);
+        int total = mailMapper.countDao(id, (pageNum - 1) * size, size);
+        List<MailList> content = mailMapper.listDao(id, (pageNum - 1) * size, size);
         return new MailPage(total, pageNum, size, content, id);
     }
 
     // 페이지 끊어서 가져오는 메소드(안 읽은 메일)
     public MailPage getUnreadMailPage(Long id, int pageNum) {
-        int total = mailDao.countUnreadDao(id, (pageNum - 1) * size, size);
-        List<MailList> content = mailDao.unreadDao(id, (pageNum - 1) * size, size);
+        int total = mailMapper.countUnreadDao(id);
+        List<MailList> content = mailMapper.unreadDao(id, (pageNum - 1) * size, size);
         return new MailPage(total, pageNum, size, content, id);
     }
 
     @Transactional
-    public MailListRequest getMail(Long id, Long mailNum, boolean increaseReadCount) { // 조회수 증가 관련
+    public MailListRequest getMail(Long id, Long mailNum) { // 조회수 증가 관련
+
         MailListRequest mail = mailRepository.list(id, mailNum);
         if (mail == null) {
             throw new MailNotFoundException();
         }
-        if (increaseReadCount) {
+        if (!id.equals(mail.getSenderId())) {
             mailRepository.increaseReadCount(mailNum);
         }
+
         return mail;
     }
 
@@ -60,4 +62,10 @@ public class MailService {
         Mail entity = Mail.builder().mailNum(writeMailDto.getMailNum()).mailTitle(writeMailDto.getMailTitle()).mailContent(writeMailDto.getMailContent()).mailDate(LocalDateTime.now()).mailSender(id).mailReceiver(writeMailDto.getMailReceiver()).mailCheck(writeMailDto.getMailCheck()).build();
         return entity;
     }
+
+//    public void mailCheckDel(List<String> mailArray) {
+//        for(int i = 0; i < mailArray.size(); i++) {
+//            mailMapper.deleteById(mailArray.get(i));
+//        }
+//    }
 }

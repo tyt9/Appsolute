@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>EmployeeList</title>
+    <style>
+        ul{
+            list-style: none;
+        }
+        li {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<form action = "/admin/employee/employeeList" method="get" id="searchForm">
+    <input type = "hidden" name="page" value="1">
+    <select name="type">
+        <option value="empName" th:selected="${pageRequestDto.type == 'empName'}">사원 이름</option>
+        <option value="empNum" th:selected="${pageRequestDto.type == 'empNum'}">사원 번호</option>
+    </select>
+    <input type="text" id="keyword" name="keyword" th:value="${pageRequestDto.keyword}" placeholder="검색어를 입력하세요">
+    <button class="btn-search" type="button">검색</button>
+</form>
+<table border="1" class="empList">
+    <tr>
+        <th>사원 번호</th>
+        <th>사원 이름</th>
+        <th>사원 부서</th>
+        <th>직책</th>
+        <th>입사일</th>
+    </tr>
+    <tr th:each="emp :${employeeList.dtoList}">
+        <td><a th:href="@{/admin/employee/employeeInfo/{empNum}(empNum=${emp.empNum}, page=${employeeList.page}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword})}">[[${emp.empNum}]]</a></td>
+        <td th:text="${emp.empName}"></td>
+        <td th:text="${emp.deptNo}"></td>
+        <td th:text="${emp.empPosition}"></td>
+        <td th:text="${#temporals.format(emp.empHireDate, 'yyyy-MM-dd')}"></td>
+    </tr>
+</table>
+<div>
+    <ul>
+        <li th:if="${employeeList.prev}">
+            <a th:href="@{/admin/employee/employeeList(page = ${employeeList.start -1}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword})}" tabindex="-1">Previous</a>
+        </li>
+        <li th:class="'page-item' + ${employeeList.page == page?'active' : ''}" th:each="page:${employeeList.pageList}">
+            <a th:href="@{/admin/employee/employeeList(page=${page}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword})}">
+                [[${page}]]
+            </a>
+        </li>
+        <li th:if="${employeeList.next}">
+            <a th:href="@{/admin/employee/employeeList(page=${employeeList.end + 1}, type=${pageRequestDto.type}, keyword=${pageRequestDto.keyword})}">Next</a>
+        </li>
+    </ul>
+</div>
+
+<button><a th:href="@{/admin/employee/register}">사원등록</a></button>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:inline="javascript">
+        var searchForm = $("#searchForm");
+        $('.btn-search').click(function (e) {
+            searchForm.submit();
+        })
+
+    </script>
+
+</body>
+</html>

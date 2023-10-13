@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>부서 정보 수정</h1>
+<form th:action="@{'/admin/dept/deptInfoModify/' + ${deptNo}}" method="post" th:object="${deptInfo}">
+    <table border="1">
+        <tbody><tr>
+            <td>부서 번호</td>
+            <td><input type="hidden" name="deptNo" th:value="*{deptNo}">[[${deptInfo.deptNo}]]</td>
+        </tr>
+        <tr>
+            <td>부서명</td>
+            <td><input type="text" name="deptName" th:value="*{deptName}"></td>
+        </tr>
+        <tr>
+            <td>부서 위치</td>
+            <td><input type="text" name="deptLoc" th:value="*{deptLoc}"></td>
+        </tr>
+        <tr>
+            <td>분류</td>
+            <td>
+                <select name="deptBranch" th:value="*{deptBranch}">
+                <option value="0">본사</option>
+                <option value="1">해외</option>
+                </select>
+            </td>
+        </tr>
+        </tbody></table>
+    <input type="submit" th:value="수정하기">
+</form>
+
+</body>
+</html>

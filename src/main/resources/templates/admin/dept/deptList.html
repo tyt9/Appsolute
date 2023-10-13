@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>DeptList</title>
+    <Style>
+        ul {
+            list-style: none;
+        }
+        li {
+            float: left;
+        }
+    </Style>
+</head>
+<body>
+<h1>Dept 목록</h1>
+
+<table border="1">
+    <tr>
+    <th>부서 번호</th>
+    <th>부서 이름</th>
+    <th>부서 위치</th>
+    </tr>
+    <tr th:each="dto:${deptList.dtoList}">
+        <td><a th:href="@{/admin/dept/deptInfo/{deptNo}(deptNo=${dto.deptNo})}">[[${dto.deptNo}]]</a></td>
+        <td>[[${dto.deptName}]]</td>
+        <td>[[${dto.deptLoc}]]</td>
+    </tr>
+    </table>
+<div>
+    <ul>
+        <li th:if="${deptList.prev}">
+            <a th:href="@{/admin/dept/deptList(page = ${employeeList.start -1})}" tabindex="-1">Previous</a>
+        </li>
+        <li th:class="'page-item' + ${deptList.page == page?'active' : ''}" th:each="page:${deptList.pageList}">
+            <a th:href="@{/admin/dept/deptList(page=${page})}">
+                [[${page}]]
+            </a>
+        </li>
+        <li th:if="${deptList.next}">
+            <a th:href="@{/admin/dept/employeeList(page=${deptList.end + 1})}">Next</a>
+        </li>
+    </ul>
+</div>
+<button><a th:href="@{/admin/dept/deptRegister}">부서등록</a></button>
+<button><a th:href="@{/admin/dept/deptRegister}">부서삭제</a></button>
+</body>
+</html>

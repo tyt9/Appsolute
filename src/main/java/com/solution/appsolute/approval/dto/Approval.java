@@ -2,7 +2,6 @@ package com.solution.appsolute.approval.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
