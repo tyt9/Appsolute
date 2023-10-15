@@ -121,6 +121,21 @@
         select max(approval_num) from approval
     </select>
 
+    <select id="findMyApproval" resultMap="approvalResultMap" parameterType="long">
+        select * from approval where emp_num = #{param}
+    </select>
+
+    <select id="approvalStatus" resultMap="approvalDetailResultMap" parameterType="int">
+        select * from approval_detail where approval_num = #{param1} and approval_status = #{param2}
+    </select>
+
+    <select id="completedApproval" resultMap="approvalResultMap" parameterType="int">
+        select * from approval where approval_num = #{param} and app_check = 1
+    </select>
+
+    <select id="includedMe" resultType="int" parameterType="long">
+        select approval_num from approval_detail where emp_check_num = #{param};
+    </select>
 
 
 </mapper>

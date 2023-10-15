@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+[[${{approval.appTitle}}]]
+
+<th:block th:each="approvalDetail : ${approvalDetail}">
+    <p th:text="${approvalDetail.empCheckNum}"></p>
+    <th:block th:if="${approvalDetail.approvalStatus == 0}">
+        미결
+    </th:block>
+    <th:block th:if="${approvalDetail.approvalStatus == 1}">
+        결재완료
+    </th:block>
+    <th:block th:if="${approvalDetail.approvalStatus == 2}">
+        반려
+    </th:block>
+</th:block>
+<hr>
+<th:block th:each="approvalContent : ${approvalContent}">
+    <p th:text="${approvalContent.fieldKey}"></p>
+    <p th:text="${approvalContent.fieldValue}"></p>
+</th:block>
+<th:block th:if="${approvalStatus.empCheckNum == sessionEmpNum}">
+    <button>결재하기</button>
+</th:block>
+</body>
+</html>

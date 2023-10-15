@@ -19,4 +19,7 @@ public interface ApprovalDao {
     public List<ApprovalDetail> approvalDetailOne(int approvalNum);
     public List<ApprovalContent> approvalContentOne(int approvalNum);
     public int lastKey();
+    public List<Approval> findMyApproval(Long empNum);
+    public List<ApprovalDetail> approvalStatus(int approvalNum, int approvalStatus);
+    public List<Integer> includedMe(long empNum);
 }
