@@ -21,5 +21,10 @@ public interface ApprovalDao {
     public int lastKey();
     public List<Approval> findMyApproval(Long empNum);
     public List<ApprovalDetail> approvalStatus(int approvalNum, int approvalStatus);
-    public List<Integer> includedMe(long empNum);
+    public List<ApprovalDetail> includedMe(long empNum);
+
+    public int selectApprovalDetailNum(long approvalNum, long empCheckNum);
+
+    public void empCheckUpdate(long approvalStatus, long approvalDetailNum);
+    public void approvalCheckUpdate(int appCheck, int approvalNum);
 }

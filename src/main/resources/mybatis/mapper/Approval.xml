@@ -133,9 +133,23 @@
         select * from approval where approval_num = #{param} and app_check = 1
     </select>
 
-    <select id="includedMe" resultType="int" parameterType="long">
-        select approval_num from approval_detail where emp_check_num = #{param};
+    <select id="includedMe" resultMap="approvalDetailResultMap" parameterType="long">
+        select * from approval_detail where emp_check_num = #{param};
     </select>
+
+    <select id="selectApprovalDetailNum" resultType="int" parameterType="long">
+        select approval_detail_num from approval_detail
+        where approval_num = #{param1} and emp_check_num = #{param2}
+    </select>
+
+    <update id="empCheckUpdate" parameterType="long">
+        update approval_detail set approval_status = #{param1}
+        where approval_detail_num = #{param2}
+    </update>
+
+    <update id="approvalCheckUpdate" parameterType="int">
+        update approval set app_check = #{param1} where approval_num = #{param2}
+    </update>
 
 
 </mapper>

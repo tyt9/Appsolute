@@ -6,7 +6,6 @@
 </head>
 <body>
 [[${{approval.appTitle}}]]
-
 <th:block th:each="approvalDetail : ${approvalDetail}">
     <p th:text="${approvalDetail.empCheckNum}"></p>
     <th:block th:if="${approvalDetail.approvalStatus == 0}">
@@ -24,8 +23,35 @@
     <p th:text="${approvalContent.fieldKey}"></p>
     <p th:text="${approvalContent.fieldValue}"></p>
 </th:block>
+<form action="/approval/receivedApproval" method="post" id="btnSubmit">
 <th:block th:if="${approvalStatus.empCheckNum == sessionEmpNum}">
-    <button>결재하기</button>
+    <button id="check" th:name="checkNum" th:value="1">결재하기</button>
+    <button id="return" th:name="checkNum" th:value="2">반려하기</button>
+    <input type="hidden" name="approvalNum" th:value="${approval.approvalNum}">
+<!--    <input type="button" id="check" value="결재하기">-->
 </th:block>
+</form>
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+
+
+    $('#check').click(function (){
+        if (confirm("승인하시겠습니까?")) {
+            $('#btnSubmit').submit();
+        } else {
+            return false;
+        }
+    })
+    $('#return').click(function (){
+        if (confirm("반려하시겠습니까?")) {
+            $('#btnSubmit').submit();
+        } else {
+            return false;
+        }
+    })
+
+
+</script>
+
 </body>
 </html>

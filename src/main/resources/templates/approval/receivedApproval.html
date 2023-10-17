@@ -8,43 +8,46 @@
 <h2>받은 결재함</h2>
 <div>
     <h3>내가 아직 승인하지 않은 문서</h3>
-    <th:block th:each="myApproval : ${myApproval}">
-        <div th:if="${myApproval.appCheck == 0}">
-            <a th:href="@{'/approval/' + ${myApproval.approvalNum}}">
-                <p th:text="${myApproval.appTitle}"></p>
+    <th:block th:each="pendingApproval : ${pendingApproval}">
+            <a th:href="@{'/approval/' + ${pendingApproval.approvalNum}}">
+                <th:block th:each="titleApproval : ${titleApproval}">
+                    <p th:if="${titleApproval.approvalNum == pendingApproval.approvalNum}" th:text="${titleApproval.appTitle}"></p>
+                </th:block>
+
             </a>
-        </div>
     </th:block>
 </div>
 <div>
     <h3>내가 승인한 문서</h3>
-    <th:block th:each="myApproval : ${myApproval}">
-        <div th:if="${myApproval.appCheck == 1}">
-            <a th:href="@{'/approval/' + ${myApproval.approvalNum}}">
-                <p th:text="${myApproval.appTitle}"></p>
-            </a>
-        </div>
+    <th:block th:each="checkedApproval : ${checkedApproval}">
+        <a th:href="@{'/approval/' + ${checkedApproval.approvalNum}}">
+            <th:block th:each="titleApproval : ${titleApproval}">
+                <p th:if="${titleApproval.approvalNum == checkedApproval.approvalNum}" th:text="${titleApproval.appTitle}"></p>
+            </th:block>
+
+        </a>
     </th:block>
 </div>
 <div>
     <h3>내가 반려한 문서</h3>
-    <th:block th:each="myApproval : ${myApproval}">
-        <div th:if="${myApproval.appCheck == 2}">
-            <a th:href="@{'/approval/' + ${myApproval.approvalNum}}">
-                <p th:text="${myApproval.appTitle}"></p>
-            </a>
-        </div>
+    <th:block th:each="rejectedApproval : ${rejectedApproval}">
+        <a th:href="@{'/approval/' + ${rejectedApproval.approvalNum}}">
+            <th:block th:each="titleApproval : ${titleApproval}">
+                <p th:if="${titleApproval.approvalNum == rejectedApproval.approvalNum}" th:text="${titleApproval.appTitle}"></p>
+            </th:block>
+
+        </a>
     </th:block>
 </div>
-<div>
-    <h3>내가 승인한 문서의 진행상황</h3>
-    <th:block th:each="myApproval : ${myApproval}">
-        <div th:if="${myApproval.appCheck == 2}">
-            <a th:href="@{'/approval/' + ${myApproval.approvalNum}}">
-                <p th:text="${myApproval.appTitle}"></p>
-            </a>
-        </div>
-    </th:block>
-</div>
+<!--<div>-->
+<!--    <h3>내가 승인한 문서의 진행상황</h3>-->
+<!--    <th:block th:each="myApproval : ${myApproval}">-->
+<!--        <div th:if="${myApproval.appCheck == 2}">-->
+<!--            <a th:href="@{'/approval/' + ${myApproval.approvalNum}}">-->
+<!--                <p th:text="${myApproval.appTitle}"></p>-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </th:block>-->
+<!--</div>-->
 </body>
 </html>

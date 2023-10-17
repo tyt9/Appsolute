@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>일반 기안</h1>
+<form action="/generalSuccess" method="post">
+<div>결재선 <br>
+
+
+    <select id="deptPick">
+        <option th:text="선택하세요"></option>
+        <th:block th:each="deptList : ${deptList}">
+            <option th:value="${deptList.deptNo}" th:text="${deptList.deptName}"></option>
+        </th:block>
+    </select>
+    <select th:class="empSelBox">
+        <option th:value="pickMe" th:text="선택하세요"></option>
+        <th:block th:each="empList : ${empList}">
+            <option th:class="optionClass" th:attr="data-deptnum=${empList.deptNo},data-empnum=${empList.empNum}" th:style="${'display:none'}" th:value="${empList.empNum}" th:text="${empList.empName}"></option>
+        </th:block>
+    </select><input type="button" th:id="addPerson" th:value="추가"/>
+    <div th:id="addPersonDiv">
+
+    </div><br><br>
+</div>
+    <table>
+        <tr>
+            <td>제목:</td>
+            <td><input type="text" name="title"/></td>
+        </tr>
+        <tr>
+            <td>기안일자:</td>
+            <td><input type="date" name="approvalDate"/></td>
+        </tr>
+        <tr>
+            <td>작성일자:</td>
+            <td><input type="date" name="creationDate"/></td>
+        </tr>
+        <tr>
+            <td>소속:</td>
+            <td><input type="text" name="department"/></td>
+        </tr>
+        <tr>
+            <td>작성자:</td>
+            <td><input type="text" name="author"/></td>
+        </tr>
+        <tr>
+            <td>내용:</td>
+            <td><textarea name="reason" rows="4"></textarea></td>
+        </tr>
+        <tr>
+            <td>문서번호:</td>
+            <td><input type="text" th:value="2" name="documentNum" th:id="documentNum" readonly/></td>
+        </tr>
+    </table>
+    <p><input type="button" th:value="제출" id="pageSubmit"></p>
+</form>
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    $('#deptPick').change(function (){
+        $('.optionClass').css('display', 'none');
+        $('.empSelBox').val('pickMe').prop('selected', true);
+        var deptNo = $(this).val();
+
+        $('.optionClass').each(function (){
+            if ($(this).data('deptnum') == deptNo) {
+                $(this).css('display', '');
+            }
+        });
+    });
+
+    $('#addPerson').click(function (){
+        var deptNameSel = $('#deptPick option:selected').text();
+        var empName = $('.empSelBox option:selected').text();
+        var empNoSel = $('.empSelBox option:selected').data('empnum');
+        if (empName == "선택하세요") {
+            alert("사원을 선택하세요");
+        } else {
+            $('#addPersonDiv').append("<div>결재 : <input data-empnosel="+empNoSel+" type=\"text\" value='"+empName+"("+deptNameSel+")"+"' readonly>" +
+                "      <input class='addPersonBtnClass' type='button' value='삭제' /><br></div>");
+        }
+    });
+
+    $(document).on("click", ".addPersonBtnClass", function(){
+        $(this).parent('div').remove();
+    });
+</script>
+</body>
+</html>
