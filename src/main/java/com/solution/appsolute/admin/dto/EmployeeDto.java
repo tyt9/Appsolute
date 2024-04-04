@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 //가입시에도 사용해야함!!!!!(Register)
 public class EmployeeDto {
 
+
     private Long empNum;
 
     private String empName;
@@ -27,7 +28,7 @@ public class EmployeeDto {
 
     private String empPassword;
 
-    private LocalDateTime empHireDate;
+    private LocalDate empHireDate;
 
     private String empPosition;
 
@@ -38,5 +39,7 @@ public class EmployeeDto {
     private double empAnnual;
 
     private String empHireDateFormatted;
+
+    private LocalDateTime lastAnnualUpdateDate;
 
 }

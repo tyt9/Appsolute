@@ -5,6 +5,7 @@ import com.solution.appsolute.mail.dao.mapper.MailMapper;
 import com.solution.appsolute.mail.dto.*;
 import com.solution.appsolute.mail.dao.repository.MailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +32,16 @@ public class MailService {
     }
 
     // 페이지 끊어서 가져오는 메소드(안 읽은 메일)
-    public MailPage getUnreadMailPage(Long id, int pageNum) {
+    public MailPage getUnreadMailPage(Long id, int pageNum, Pageable pageable) {
         int total = mailMapper.countUnreadDao(id);
         List<MailList> content = mailMapper.unreadDao(id, (pageNum - 1) * size, size);
+        return new MailPage(total, pageNum, size, content, id);
+    }
+
+    // 페이지 끊어서 가져오는 메소드(특정 인물이 보낸 메일)
+    public MailPage getUnreadMailPageLikeEmp(Long id, int pageNum, Long mailSender) {
+        int total = mailMapper.countLikeEmp(id, mailSender);
+        List<MailList> content = mailMapper.findByMailReceiveLikeEmp(id, (pageNum - 1) * size, size, mailSender);
         return new MailPage(total, pageNum, size, content, id);
     }
 

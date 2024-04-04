@@ -46,8 +46,21 @@ public class LoginController {
     @GetMapping("/login/mypage")
     public String mypage(HttpSession session, Model model){
         AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+        model.addAttribute("empList", loginMapper.myPageListEmp());
         int mailTotal = mailMapper.countUnreadDao(authInfo.getEmp_num());
         model.addAttribute("mailTotal", mailTotal);
+        model.addAttribute("empNum", authInfo.getEmp_num());
+        model.addAttribute("userName", authInfo.getEmp_name());
+        return "/login/mypage";
+    }
+
+    @GetMapping("/login/search")
+    public String mypageSearch(HttpSession session, Model model, @RequestParam(value = "keyword") String name){
+        AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+        model.addAttribute("empList", loginMapper.myPageListEmpByName(name));
+        int mailTotal = mailMapper.countUnreadDao(authInfo.getEmp_num());
+        model.addAttribute("mailTotal", mailTotal);
+        model.addAttribute("empNum", authInfo.getEmp_num());
         model.addAttribute("userName", authInfo.getEmp_name());
         return "/login/mypage";
     }

@@ -17,12 +17,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletMapping;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,8 +33,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
+import static com.solution.appsolute.entity.QBoard.board;
 
 @Controller
 @AllArgsConstructor
@@ -51,7 +55,9 @@ public class BoardController {
     private final EmployeeRepository employeeRepository;
 
     @GetMapping("/boardForm")
-    public String addBoard() {
+    public String addBoard(Model model, HttpSession session) {
+        AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+        model.addAttribute("userName", authInfo.getEmp_name());
         return "/board/boardForm";
     }
 
@@ -61,6 +67,7 @@ public class BoardController {
             , HttpSession session) {
 
         AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+
 
         if (authInfo != null) {
             String createdBy = authInfo.getEmp_name();
@@ -106,22 +113,30 @@ public class BoardController {
 
 
     @GetMapping("/boardList")
-    public String boardList(Model model, @PageableDefault(size = 10) Pageable pageable,
-                            @RequestParam(required = false, defaultValue = "") String searchText) {
+    public String boardList(Model model, @PageableDefault(size = 10, sort = "countVisit", direction = Sort.Direction.DESC) Pageable pageable,
+                            @RequestParam(required = false, defaultValue = "") String searchText, HttpSession session) {
 
-        Page<Board> boards = boardRepository.findByTitleContaining(searchText, pageable);
+        List<Board> topByCountVisit = boardRepository.findTopByCountVisit();
+        Page<Board> boards = boardRepository.findByTitleContainingOrderByIdDesc(searchText, pageable);
+
         int startPage = Math.max(1, boards.getPageable().getPageNumber() - 1);
         int endPage = Math.min(boards.getTotalPages(), boards.getPageable().getPageNumber() + 3);
+        int totalPage = boards.getTotalPages();
 
+        topByCountVisit.addAll(boards.getContent());
+        AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
 
         model.addAttribute("boards", boards);
+        model.addAttribute("topByCountVisit", topByCountVisit);
+        model.addAttribute("totalPage", totalPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("userName", authInfo.getEmp_name());
         return "board/boardList";
     }
 
     @GetMapping("/boardContent/{id}")
-    public String boardContent(@PathVariable("id") Long id, Model model) {
+    public String boardContent(@PathVariable("id") Long id, Model model, HttpSession session) {
         Board board = boardRepository.findById(id).get();
         List<BoardComment> comments = boardCommentRepository.findCommentsBoardId(id);
 
@@ -129,9 +144,11 @@ public class BoardController {
                 .countVisit(board.getCountVisit()+1)
                 .build();
 
-        boardService.updateVisit(board.getId(), boardDto);
+//        boardService.updateVisit(board.getId(), boardDto);
 
         boardService.countVisitLogic(id);
+        AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+        model.addAttribute("userName", authInfo.getEmp_name());
 
         model.addAttribute(board);
         model.addAttribute("comments", comments);
@@ -182,8 +199,12 @@ public class BoardController {
 
 
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, Model model){
+    public String edit(@PathVariable("id") Long id, Model model, HttpSession session){
         BoardDto boardDto = boardService.getBoard(id);
+
+        AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+        model.addAttribute("userName", authInfo.getEmp_name());
+
         model.addAttribute("dto", boardDto);
         return "board/boardEdit";
     }

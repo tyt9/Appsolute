@@ -27,4 +27,5 @@ public interface ApprovalDao {
 
     public void empCheckUpdate(long approvalStatus, long approvalDetailNum);
     public void approvalCheckUpdate(int appCheck, int approvalNum);
+    public ApprovalDetail prevDetail(int prevDetailNum);
 }

@@ -1,6 +1,5 @@
 package com.solution.appsolute.admin.dao.repository;
 
-import com.querydsl.core.BooleanBuilder;
 import com.solution.appsolute.entity.Employee;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -16,8 +15,6 @@ import java.util.List;
 
 @Repository
 public interface AdminEmployeeRepository extends JpaRepository<Employee, Long>, QuerydslPredicateExecutor<Employee> {
-    @Query("SELECT e FROM Employee e WHERE e.empNum = :empNum")
-    Employee findByEmpNum(@Param("empNum") Long empNum);
 
 
     @Query("SELECT e.empNum, e.empName FROM Employee e WHERE e.deptNo = :deptNo AND e.empPosition = '팀장'")
@@ -35,16 +32,36 @@ public interface AdminEmployeeRepository extends JpaRepository<Employee, Long>, 
     @Query("SELECT e.empNum, e.empName FROM Employee e WHERE e.deptNo = :deptNo")
     List<Object[]> findEmployeesByDeptNo(@Param("deptNo") Long deptNo);
 
-    @Modifying
+
     @Transactional
-    @Query("UPDATE Employee e " +
-            "SET e.empAnnual = CASE " +
-            "WHEN (DATEDIFF(CURRENT_DATE, e.empHireDate) < 30) THEN e.empAnnual " +
-            "WHEN (DATEDIFF(CURRENT_DATE, e.empHireDate) >= 30 AND DATEDIFF(CURRENT_DATE, e.empHireDate) < 365) THEN (e.empAnnual + 1) " +
-            "ELSE CASE " +
-            "WHEN (DATEDIFF(CURRENT_DATE, e.empHireDate) < 730) THEN 15 " +
-            "ELSE (15 + FLOOR((DATEDIFF(CURRENT_DATE, e.empHireDate) - 365) / 730)) " +
-            "END END " +
-            "WHERE e.empNum = :empNum")
-    void updateEmpAnnualByEmpNum(@Param("empNum") Long empNum);
+    @Modifying
+    @Query(value = "UPDATE employee " +
+            "SET last_annual_update_date = CURRENT_DATE, " +
+            "emp_annual = " +
+            "CASE  " +
+            "    WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) < 365 THEN emp_annual + 1 " +
+            "    WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) >= 365 THEN " +
+            "        CASE " +
+            "            WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) < 730 THEN 15 " +
+            "            WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) < 1095 THEN 16 " +
+            "            WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) < 1460 THEN 17 " +
+            "            WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) < 1825 THEN 18 " +
+            "            WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) < 2190 THEN 19 " +
+            "            WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) < 2555 THEN 20 " +
+            "            WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) < 2920 THEN 21 " +
+            "            WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) < 3285 THEN 22 " +
+            "            WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) < 3650 THEN 23 " +
+            "            WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) < 4015 THEN 24 " +
+            "            WHEN TIMESTAMPDIFF(DAY, emp_hire_date, CURRENT_DATE) < 4380 THEN 25 " +
+            "            ELSE 26 " +
+            "        END " +
+            "    ELSE emp_annual " +
+            "END " +
+            "WHERE (last_annual_update_date != CURRENT_DATE OR last_annual_update_date IS NULL) AND emp_num = :emp_num", nativeQuery = true)
+    public void updateEmployeeAnnual(@Param("emp_num") Long emp_num);
+
+
+    Page<Employee> findAllByOrderByEmpNumDesc(Pageable pageable);
+
+
 }

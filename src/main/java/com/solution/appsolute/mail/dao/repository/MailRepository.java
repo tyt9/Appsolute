@@ -29,7 +29,8 @@ public interface MailRepository extends JpaRepository<Mail, Long> {
     @Query(value = "select m.mailNum as mailNum, m.mailCheck as mailCheck, m.mailSender as mailSender, m.mailReceiver as mailReceiver, " +
             "e.empName as empName, m.mailTitle as mailTitle, m.mailContent as mailContent, m.mailDate as mailDate " +
             " from Mail m inner join Employee e on m.mailSender = e.empNum where m.mailReceiver = :mailReceiver order by m.mailNum desc")
-    Page<MailDto> findByMailReceive(Long mailReceiver, Pageable pageable); // 받는 메일 리스트
+    Page<MailDto> findByMailReceive(Long mailReceiver, Pageable pageable); // 받은 메일 리스트
+
 
     @Query(value = "SELECT m.mailNum as mailNum, m.mailTitle as mailTitle, m.mailContent as mailContent, m.mailDate as mailDate, m.mailSender AS senderId, e.empName AS senderName, e.empEmail as senderEmail, " +
             "m.mailReceiver AS receiverId, f.empName AS receiverName, f.empEmail as receiverEmail, m.mailCheck as mailCheck " +
@@ -55,7 +56,7 @@ public interface MailRepository extends JpaRepository<Mail, Long> {
     @Query("update Mail m set m.mailCheck = m.mailCheck + 1 where m.mailNum = :no")
     void increaseReadCount(Long no) ;
 
-
+    public Page<Mail> findAllByOrderByMailNumDesc(Pageable pageable);
 
 
 }

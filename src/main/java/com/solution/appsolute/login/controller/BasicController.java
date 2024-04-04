@@ -34,7 +34,11 @@ public class BasicController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-
+//    @GetMapping("/")
+//    public String getLogin() {
+//
+//        return "/login/login";
+//    }
 
 
     @GetMapping("/login/basic")
@@ -42,6 +46,7 @@ public class BasicController {
         AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
         int mailTotal = mailMapper.countUnreadDao(authInfo.getEmp_num());
         model.addAttribute("mailTotal", mailTotal);
+        model.addAttribute("empNum", authInfo.getEmp_num());
         model.addAttribute("userName", authInfo.getEmp_name());
         return "/login/basic";
     }
@@ -61,6 +66,7 @@ public class BasicController {
         return "redirect:/login/basic";
 
     }
+
 
 
 }

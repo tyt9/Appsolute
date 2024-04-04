@@ -3,6 +3,7 @@ package com.solution.appsolute.approval.controller;
 import com.solution.appsolute.approval.dao.ApprovalDao;
 import com.solution.appsolute.approval.dto.Approval;
 import com.solution.appsolute.approval.dto.ApprovalDetail;
+import com.solution.appsolute.approval.dto.PurchaseVO;
 import com.solution.appsolute.login.dto.AuthInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -21,7 +23,12 @@ public class ApprovalController {
     private ApprovalDao approvalDao;
 
     @GetMapping("/purchase")
-    public void purchase1(Model model){
+    public void purchase1(Model model, HttpSession session){
+
+        AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+        model.addAttribute("authInfo", authInfo);
+        model.addAttribute("userName", authInfo.getEmp_name());
+
         model.addAttribute("deptList", approvalDao.deptList());
         model.addAttribute("empList", approvalDao.empList());
         model.addAttribute("purchaseFieldNames", approvalDao.purchaseFieldNames());
@@ -31,7 +38,11 @@ public class ApprovalController {
 
 
     @GetMapping("/purchaseSuccess")
-    public void purchasePost1(Model model) {
+    public void purchasePost1(Model model, HttpSession session) {
+
+        AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+        model.addAttribute("userName", authInfo.getEmp_name());
+
         model.addAttribute("approvalOne", approvalDao.approvalOne(69));
 //        System.out.println(approvalDao.approvalOne(67));
         model.addAttribute("approvalDetailOne", approvalDao.approvalDetailOne(69));
@@ -44,7 +55,9 @@ public class ApprovalController {
     }
 
     @PostMapping("/purchaseSuccess")
-    public void purchasePost(Model model) {
+    public String purchasePost(Model model, HttpSession session) {
+        AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+        model.addAttribute("userName", authInfo.getEmp_name());
         System.out.println(approvalDao.lastKey());
         int lastKey = approvalDao.lastKey();
         model.addAttribute("approvalOne", approvalDao.approvalOne(lastKey));
@@ -54,12 +67,13 @@ public class ApprovalController {
         model.addAttribute("approvalContentOne", approvalDao.approvalContentOne(lastKey));
         System.out.println("test 2 > "+approvalDao.approvalContentOne(lastKey));
 //        System.out.println("--------------"+expenseReport);
-
+        return "redirect:/approval/myApproval";
     }
 
     @GetMapping("/myApproval")
     public void myApproval(Model model, HttpSession session){
         AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+        model.addAttribute("userName", authInfo.getEmp_name());
         if (authInfo != null) {
             System.out.println(authInfo);
             System.out.println(authInfo.getEmp_num());
@@ -73,6 +87,7 @@ public class ApprovalController {
     @GetMapping("/{approvalNum}")
     public String approval(Model model, @PathVariable long approvalNum, HttpSession session) {
         AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+        model.addAttribute("userName", authInfo.getEmp_name());
         model.addAttribute("sessionEmpNum", authInfo.getEmp_num());
         model.addAttribute("approval", approvalDao.approvalOne((int) approvalNum));
         model.addAttribute("approvalDetail", approvalDao.approvalDetailOne((int) approvalNum));
@@ -141,9 +156,9 @@ public class ApprovalController {
     @GetMapping("/receivedApproval")
     public void receivedApproval(Model model, HttpSession session){
         AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
-        System.out.println(approvalDao.includedMe(authInfo.getEmp_num()));
+//        System.out.println(approvalDao.includedMe(authInfo.getEmp_num()));
         List<ApprovalDetail> approvalsIncludedMe = approvalDao.includedMe(authInfo.getEmp_num());
-        System.out.println(approvalsIncludedMe);
+//        System.out.println(approvalsIncludedMe);
 
         List<ApprovalDetail> pendingApproval = new ArrayList<>();
         List<ApprovalDetail> checkedApproval = new ArrayList<>();
@@ -154,28 +169,40 @@ public class ApprovalController {
         for (ApprovalDetail approvalDetail : approvalsIncludedMe) {
             appNum.add((int)approvalDetail.getApprovalNum());
             if (approvalDetail.getApprovalStatus() == 0) {
-
-                pendingApproval.add(approvalDetail);
-                //여기 필터링 확인
-                List<ApprovalDetail> approvalDetails = approvalDao.approvalStatus((int)approvalDetail.getApprovalNum(), 0);
-                ApprovalDetail apd = null;
-                int index = 0;
-                for (ApprovalDetail detail : approvalDetails) {
-                    if (detail.getApprovalStatus() == 0) {
-                        apd = detail;
-                        index++;
-                        break;
+                ApprovalDetail prevDetail = approvalDao.prevDetail((int)approvalDetail.getApprovalDetailNum()-1);
+//                System.out.println(approvalDao.prevDetail((int)approvalDetail.getApprovalDetailNum()-1));
+                if (prevDetail != null) {
+                    System.out.println("여기까지 되나?");
+                    if (prevDetail.getApprovalNum() == approvalDetail.getApprovalNum()) {
+                        if (prevDetail.getApprovalStatus() == 1) {
+                            pendingApproval.add(approvalDetail);
+                        }
+                    }else {
+                        pendingApproval.add(approvalDetail);
                     }
                 }
 
-                ApprovalDetail aa = new ApprovalDetail();
-                aa.setEmpCheckNum(0);
+
+                //여기 필터링 확인
+//                List<ApprovalDetail> approvalDetails = approvalDao.approvalStatus((int)approvalDetail.getApprovalNum(), 0);
+//                ApprovalDetail apd = null;
+//                int index = 0;
+//                for (ApprovalDetail detail : approvalDetails) {
+//                    if (detail.getApprovalStatus() == 0) {
+//                        apd = detail;
+//                        index++;
+//                        break;
+//                    }
+//                }
+//
+//                ApprovalDetail aa = new ApprovalDetail();
+//                aa.setEmpCheckNum(0);
 //        System.out.println(approvalDao.approvalStatus((int) approvalNum, 0));
-                if (apd != null) {
-                    model.addAttribute("pendingApproval",apd);
-                }else {
-                    model.addAttribute("pendingApproval",aa);
-                }
+//                if (apd != null) {
+//                    model.addAttribute("pendingApproval",apd);
+//                }else {
+//                    model.addAttribute("pendingApproval",aa);
+//                }
 
 
 
@@ -193,8 +220,30 @@ public class ApprovalController {
         for (Integer i : appNum) {
             titleApproval.add(approvalDao.approvalOne(i));
         }
-        System.out.println(appNum);
-//        model.addAttribute("pendingApproval", pendingApproval);
+//        System.out.println(appNum);
+        System.out.println(pendingApproval);
+        if (pendingApproval.isEmpty()) {
+            List<ApprovalDetail> list = new ArrayList<>();
+            list.add(new ApprovalDetail(0,0,0,null,0,0,0,null));
+            pendingApproval = list;
+        }
+        if (checkedApproval.isEmpty()) {
+            List<ApprovalDetail> list = new ArrayList<>();
+            list.add(new ApprovalDetail(0,0,0,null,0,0,0,null));
+            checkedApproval = list;
+        }
+        if (rejectedApproval.isEmpty()) {
+            List<ApprovalDetail> list = new ArrayList<>();
+            list.add(new ApprovalDetail(0,0,0,null,0,0,0,null));
+            rejectedApproval = list;
+        }
+        if (titleApproval.isEmpty()) {
+            List<Approval> list = new ArrayList<>();
+            list.add(new Approval(0L,0,new Date(),0,0,"",0,0,0,null,null));
+            titleApproval = list;
+        }
+        model.addAttribute("userName",authInfo.getEmp_name());
+        model.addAttribute("pendingApproval", pendingApproval);
         model.addAttribute("checkedApproval", checkedApproval);
         model.addAttribute("rejectedApproval", rejectedApproval);
         model.addAttribute("titleApproval", titleApproval);
@@ -317,20 +366,34 @@ public class ApprovalController {
     }
 
 
-
-    @GetMapping("/annual")
-    public void annual(){
-
-    }
-
-    @PostMapping("/annualSuccess")
-    public void annualSuccess(){
-
-    }
-
     @GetMapping("/general")
-    public void general(Model model){
+    public void general(Model model, HttpSession session){
+        AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+        model.addAttribute("userName", authInfo.getEmp_name());
         model.addAttribute("deptList", approvalDao.deptList());
         model.addAttribute("empList", approvalDao.empList());
+        model.addAttribute("lastKey", approvalDao.lastKey());
+    }
+
+    @PostMapping("/generalSuccess")
+    public String generalSuccess(Model model, String content, String insertedKey, HttpSession session) {
+
+        AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+        model.addAttribute("userName", authInfo.getEmp_name());
+        System.out.println(content);
+        System.out.println(insertedKey);
+        PurchaseVO purchaseVO = new PurchaseVO(Long.parseLong(insertedKey)+1 , "2", "내용", content);
+        approvalDao.addPurchaseDetail(purchaseVO);
+
+        System.out.println(approvalDao.lastKey());
+        int lastKey = approvalDao.lastKey();
+        model.addAttribute("approvalOne", approvalDao.approvalOne(lastKey));
+//        System.out.println(approvalDao.approvalOne(67));
+        model.addAttribute("approvalDetailOne", approvalDao.approvalDetailOne(lastKey));
+        System.out.println("test > "+approvalDao.approvalDetailOne(lastKey));
+        model.addAttribute("approvalContentOne", approvalDao.approvalContentOne(lastKey));
+        System.out.println("test 2 > "+approvalDao.approvalContentOne(lastKey));
+//        System.out.println("--------------"+expenseReport);
+        return "redirect:/approval/myApproval";
     }
 }

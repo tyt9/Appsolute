@@ -14,21 +14,27 @@
     <link href="/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
+
+
+        .highlight {
+            background-color: #F2F5A9;
         }
-        .fixed-footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #212529;
-            padding: 10px 0 10px 220px;
-            text-align: center;
+
+        /*.container {*/
+        /*    background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;*/
+        /*}*/
+
+        .visited-link {
+            color: #6A0888; /* 이미 클릭한 링크의 텍스트 색상 지정 */
+            text-decoration: none; /* 밑줄 제거 */
         }
+
+
+
+
     </style>
     <!-- Custom styles for this template -->
     <link href="static/css/headers.css" rel="stylesheet">
@@ -38,12 +44,12 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="container" style="margin-left: 20%">
+    <div class="container" style="margin-top: 50px;">
         <table class="table table-hover">
-            <br><br><br><br><br>
             <div>
-                <h3 style="font-weight: bold;">공지사항</h3>
+                <h1 class="centered-text" style="font-weight: bold;">공지사항</h1>
             </div>
+            <hr>
             <div class="form-inline d-flex justify-content-end" style="width: 100%;">
                 <form method="GET" th:action="@{/board/boardList}" th:value="${param.searchText}">
                     <div class="form-group mx-sm-3 mb-2">
@@ -54,7 +60,7 @@
                 </form>
             </div>
             <thead>
-            <tr>
+            <tr style="background-color: lightgray">
                 <th>번호</th>
                 <th>제목</th>
                 <th>작성자</th>
@@ -62,37 +68,99 @@
                 <th>조회수</th>
             </tr>
             </thead>
+
+<!--            <tbody>-->
+
+<!--<tr th:each="board, loop : ${boards}" th:class="${board.countVisit == 0} ? 'highlight' : ''">-->
+<!--    <td th:text="${boards.totalElements - (boards.number * boards.size) - loop.index}"></td>-->
+<!--    <td><a th:href="@{'/board/boardContent/' + ${board.id}}"><span th:text="${board.title}"></span></a></td>-->
+<!--    <td th:text="${board.createdBy}"></td>-->
+<!--    <td th:text="${board.createdDate}"></td>-->
+<!--    <td th:text="${board.countVisit}"></td>-->
+<!--</tr>-->
+<!--            -->
+<!--            </tbody>-->
+
             <tbody>
-            <tr th:each="board : ${boards}">
-                <td th:text="${board.id}"></td>
+            <!-- 먼저 조회수가 0인 공지사항을 출력 -->
+            <tr th:each="board, loop : ${boards}" th:if="${board.countVisit == 0}" th:class="highlight">
+                <td th:text="${boards.totalElements - (boards.number * boards.size) - loop.index}"></td>
+                <td><a th:href="@{'/board/boardContent/' + ${board.id}}"><span th:text="${board.title}"></span></a></td>
+                <td th:text="${board.createdBy}"></td>
+                <td th:text="${board.createdDate}"></td>
+                <td th:text="${board.countVisit}"></td>
+            </tr>
+            <!-- 나머지 공지사항을 출력 -->
+            <tr th:each="board, loop : ${boards}" th:unless="${board.countVisit == 0}">
+                <td th:text="${boards.totalElements - (boards.number * boards.size) - loop.index}"></td>
                 <td><a th:href="@{'/board/boardContent/' + ${board.id}}"><span th:text="${board.title}"></span></a></td>
                 <td th:text="${board.createdBy}"></td>
                 <td th:text="${board.createdDate}"></td>
                 <td th:text="${board.countVisit}"></td>
             </tr>
             </tbody>
+
+
         </table>
         <hr/>
-        <div class="btn-group" style="float: right;">
+        <div class="btn-group" th:if="${userName != null && userName.equals('고양이')}" style="float: right;">
             <button type="button" class="btn btn-primary mb-2" onclick="location.href='/board/boardForm'">공지작성</button>
         </div>
-        <div class="center text-center">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justifiy-content-center" th:if="${totalPage != 0}">
-                    <li class="page-item"><a class="page-link" th:href="@{/board/boardList(page=${boards.pageable.pageNumber - 1}, searchText=${param.searchText})}">이전페이지</a></li>
-                    <li class="" style="margin-left:5%;" th:classappend="${page == boards.pageable.pageNumber + 1} ? 'disabled'" th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                        <a th:href="@{/board/boardList(page=${page - 1}, searchText=${param.searchText})}" th:text="${page}"></a>
+
+
+
+        <div th:if="${!boards.isEmpty()}">
+            <!-- 전역 변수 선언 -->
+            <nav
+                    th:with="pageNumber = ${boards.pageable.pageNumber}, pageSize = ${boards.pageable.pageSize},totalPages = ${boards.totalPages},startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},tempEndPage = ${startPage + pageSize - 1},endPage = (${tempEndPage < totalPages ? tempEndPage : totalPages})"
+                    aria-label="Page navigation"
+            >
+                <ul class="pagination">
+                    <!-- 처음으로 이동 -->
+                    <li th:classappend="${pageNumber == 0} ? 'disabled'" class="page-item">
+                        <a class="page-link" th:href="@{/board/boardList(page=0)}">
+                            <span>&laquo;첫 페이지</span>
+                        </a>
                     </li>
-                    <li class="page-item" style="margin-left:6%;"><a class="page-link" th:href="@{/board/boardList(page=${boards.pageable.pageNumber + 1}, searchText=${param.searchText})}">다음페이지</a></li>
+
+                    <!-- 이전으로 이동 -->
+                    <li th:classappend="${boards.first} ? 'disabled'" class="page-item">
+                        <a class="page-link" th:href="${boards.first} ? '#' : @{/board/boardList(page=${pageNumber - 1})}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;이전 페이지</span>
+                        </a>
+                    </li>
+
+                    <!-- 특정 페이지로 이동 -->
+                    <li th:each="page: ${#numbers.sequence(startPage, endPage)}" th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
+                        <a th:text="${page}" class="page-link" th:href="@{/board/boardList(page=${page - 1})}"></a>
+                    </li>
+
+                    <!-- 다음으로 이동 -->
+                    <li th:classappend="${boards.last} ? 'disabled'" class="page-item">
+                        <a class="page-link" th:href="${boards.last} ? '#' : @{/board/boardList(page=${pageNumber + 1})}" aria-label="Next">
+                            <span aria-hidden="true">다음 페이지&gt;</span>
+                        </a>
+                    </li>
+
+                    <!-- 마지막으로 이동 -->
+                    <li th:classappend="${pageNumber == totalPages - 1} ? 'disabled'" class="page-item">
+                        <a class="page-link" th:href="@{/board/boardList(page=${totalPages - 1})}">
+                            <span>마지막 페이지&raquo;</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
-        </div>
+        </div> <!-- /container -->
+
+
     </div>
 </div>
 <div  class="text-center">
     <ul class="pagination">
     </ul>
 </div>
+
+
 
 
 

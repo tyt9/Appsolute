@@ -1,10 +1,8 @@
 package com.solution.appsolute.admin.service;
 import com.solution.appsolute.admin.dto.DeptDto;
-import com.solution.appsolute.admin.dto.EmployeeDto;
 import com.solution.appsolute.admin.dto.PageRequestDto;
 import com.solution.appsolute.admin.dto.PageResultDto;
 import com.solution.appsolute.entity.Dept;
-import com.solution.appsolute.entity.Employee;
 
 public interface AdminDeptService {
 

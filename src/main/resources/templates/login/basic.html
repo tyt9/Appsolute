@@ -11,11 +11,41 @@
     <link href="/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
-<body class="sb-nav-fixed">
+    <style>
+
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #212529;
+            padding: 10px 0 10px 220px;
+            text-align: center;
+        }
+
+
+        /*#layoutSidenav #layoutSidenav_content {*/
+        /*    position: relative;*/
+        /*    display: flex;*/
+        /*    flex-direction: row; !* 가로로 배치되도록 수정 *!*/
+        /*    justify-content: space-between;*/
+        /*    min-width: 0;*/
+        /*    flex-grow: 1;*/
+        /*    min-height: 100vh;*/
+        /*    margin-left: -225px;*/
+        /*    bottom: 0; !* 하단에 위치하도록 수정 *!*/
+        /*}*/
+
+    </style>
+
+</head>
+<body>
 
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
+
     <a class="navbar-brand ps-3" href="/login/mypage">[[${userName}]]님</a>
+<!--    <a class="navbar-brand ps-3" href="/login/mypage" th:text="${userName} + '님'"></a>-->
+
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <!-- Navbar Search-->
@@ -30,7 +60,7 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#!">비밀번호 변경</a></li>
+                <li><a class="dropdown-item" th:href="@{/employee/employeeInfoModify/{empNum}(empNum=${empNum})}">사원 정보 수정</a></li>
                 <li><hr class="dropdown-divider" /></li>
                 <li><a class="dropdown-item"  onclick="confirmLogout()">로그아웃</a></li >
             </ul>
@@ -56,9 +86,9 @@
                             </a>
                             <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="login.html">결재1</a>
-                                    <a class="nav-link" href="register.html">결재2</a>
-                                    <a class="nav-link" href="password.html">결재3</a>
+                                    <a class="nav-link" href="/approval/purchase">지출 결의서</a>
+                                    <a class="nav-link" href="/approval/general">일반 기안서</a>
+<!--                                    <a class="nav-link" href="password.html">결재3</a>-->
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
@@ -67,9 +97,9 @@
                             </a>
                             <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="401.html">확인된거</a>
-                                    <a class="nav-link" href="404.html">안된거</a>
-                                    <a class="nav-link" href="500.html">내가 올린 결재</a>
+<!--                                    <a class="nav-link" href="401.html">확인된거</a>-->
+                                    <a class="nav-link" href="/approval/receivedApproval">받은 결재</a>
+                                    <a class="nav-link" href="/approval/myApproval">내가 올린 결재</a>
                                 </nav>
                             </div>
                         </nav>
@@ -78,7 +108,7 @@
                     <div class="sb-sidenav-menu-heading">Mail</div>
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                         <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                        메일
+                        메시지
                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
                     <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
@@ -96,17 +126,35 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                         공지사항
                     </a>
-                    <a class="nav-link"  th:if="${userName != null && userName.equals('cat')}" href="/admin/employee">
+
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="false" aria-controls="collapse"  th:if="${userName.equals('고양이')}" >
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         관리자
+
+
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
+                    <div class="collapse" id="collapse" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="/admin/employee/employeeList">사원 관리</a>
+                            <a class="nav-link" href="/admin/dept/deptList">부서 관리</a>
+                            <a class="nav-link" href="/admin/annual/annualList">휴가 관리</a>
+                        </nav>
+                    </div>
+
+                    <!--                     번역-->
+                    <div class="sb-sidenav-menu-heading">다국어 번역 </div>
+                    <div class="gtranslate_wrapper" style="margin-left: 20px"></div>
+                    <script>window.gtranslateSettings = {"default_language":"ko","native_language_names":true,"detect_browser_language":true,"languages":["ko","en","zh-CN","ja"],"wrapper_selector":".gtranslate_wrapper","alt_flags":{"en":"usa"}}</script>
+                    <script src="https://cdn.gtranslate.net/widgets/latest/flags.js" defer></script>
+
                 </div>
             </div>
         </nav>
     </div>
-
+    <div id="layoutSidenav_content">
     <div class="container-fluid" layout:fragment="content">
-
+<!--        <img src="/image/appsolute.png" alt="Your Image" class="dashboard-image">-->
         <h1 class="mt-4">Simple Sidebar</h1>
         <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
         <p>
@@ -116,15 +164,14 @@
             <code>#sidebarToggle</code>
             ID which will toggle the menu when clicked.
         </p>
+
+
     </div>
 
-
-
-    <div id="layoutSidenav_content">
         <footer class="py-4 bg-light mt-auto">
             <div class="container-fluid px-4">
                 <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                    <div class="text-muted">Copyright &copy; Appsolute 2023</div>
                     <div>
                         <a href="#">Privacy Policy</a>
                         &middot;
@@ -133,9 +180,24 @@
                 </div>
             </div>
         </footer>
-    </div>
 
 </div>
+
+
+<!--<div class="fixed-footer">-->
+<!--    <footer class="py-4 bg-light mt-auto">-->
+<!--        <div class="container-fluid px-4">-->
+<!--            <div class="d-flex align-items-center justify-content-between small">-->
+<!--                <div class="text-muted">Copyright &copy; Your Website 2023</div>-->
+<!--                <div>-->
+<!--                    <a href="#">Privacy Policy</a>-->
+<!--                    &middot;-->
+<!--                    <a href="#">Terms &amp; Conditions</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </footer>-->
+<!--</div>-->
 
 
 
@@ -149,5 +211,6 @@
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
 <script src="/js/datatables-simple-demo.js"></script>
 <script src="/js/logout.js"></script>
+</div>
 </body>
 </html>

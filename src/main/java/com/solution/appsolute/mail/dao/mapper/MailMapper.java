@@ -17,4 +17,9 @@ public interface MailMapper {
 
     public int deleteById(int id);
 
+    public List<MailList> findByMailReceiveLikeEmp(Long id, int startRow, int size, Long mailSender);
+
+    public Integer countLikeEmp(Long id, Long mailSender);
+
+    String findByMailLikeName(Long sender, Long receiver);
 }

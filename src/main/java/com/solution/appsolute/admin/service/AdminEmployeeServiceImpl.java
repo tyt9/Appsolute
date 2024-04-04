@@ -5,22 +5,18 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.solution.appsolute.admin.dao.repository.AdminDeptRepository;
 import com.solution.appsolute.admin.dao.repository.AdminEmployeeRepository;
-import com.solution.appsolute.admin.dto.EmployeeDto;
-import com.solution.appsolute.admin.dto.PageRequestDto;
-import com.solution.appsolute.admin.dto.PageResultDto;
+import com.solution.appsolute.admin.dao.repository.AdminMapper;
+import com.solution.appsolute.admin.dto.*;
 import com.solution.appsolute.entity.Employee;
 import com.solution.appsolute.entity.QEmployee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -28,11 +24,13 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 public class AdminEmployeeServiceImpl implements AdminEmployeeService {
-    @Autowired
-    AdminEmployeeRepository adminEmployeeRepository;
 
-    @Autowired
-    AdminDeptRepository adminDeptRepository;
+    private final AdminEmployeeRepository adminEmployeeRepository;
+
+
+    private final AdminMapper adminMapper;
+
+    private final AdminDeptRepository adminDeptRepository;
 
     //employeeService
 
@@ -42,6 +40,10 @@ public class AdminEmployeeServiceImpl implements AdminEmployeeService {
         adminEmployeeRepository.save(entity);
         return entity.getEmpNum();
     }
+
+
+
+
 
     @Override
     public EmployeeDto readEmployee(Long empNum) {
@@ -59,8 +61,19 @@ public class AdminEmployeeServiceImpl implements AdminEmployeeService {
         Optional<Employee> result = adminEmployeeRepository.findById(employeeDto.getEmpNum());
         if(result.isPresent()) {
             Employee entity = result.get();
+            entity.changePassword(employeeDto.getEmpPassword());
             entity.changeEmpName(employeeDto.getEmpName());
             entity.changeEmpPhone(employeeDto.getEmpPhone());
+            adminEmployeeRepository.save(entity);
+        }
+    }
+
+    @Override
+    public void modifyEmpAnnual(EmployeeDto employeeDto) {
+        Optional<Employee> result = adminEmployeeRepository.findById(employeeDto.getEmpNum());
+        if(result.isPresent()) {
+            Employee entity = result.get();
+            entity.changeEmpAnnual(employeeDto.getEmpAnnual());
             adminEmployeeRepository.save(entity);
         }
     }
@@ -90,10 +103,27 @@ public class AdminEmployeeServiceImpl implements AdminEmployeeService {
     }
 
     @Override
+    public AnnualPage getEmpAnnualList(int pageNum) {
+        int size = 10;
+        int total = adminMapper.countAnnualList((pageNum - 1) *size, size);
+        List<EmpAnnualDto> content = adminMapper.listEmpAnnual((pageNum -1)*size, size);
+        return new AnnualPage(total, pageNum, size, content);
+    }
+
+    @Override
+    public AnnualPage getAllEmpAnnualList(int pageNum) {
+        int size = 10;
+        int total = adminMapper.countListAllEmployee((pageNum - 1) *size, size);
+        List<EmpAnnualDto> content = adminMapper.listAllEmployee((pageNum -1)*size, size);
+        return new AnnualPage(total, pageNum, size, content);
+    }
+
+
+    @Override
     @Transactional
     public void updateEmpAnnualByEmpNums(List<Long> empNums) {
         for(Long empNum : empNums) {
-            adminEmployeeRepository.updateEmpAnnualByEmpNum(empNum);
+            adminEmployeeRepository.updateEmployeeAnnual(empNum);
         }
     }
 
@@ -111,7 +141,6 @@ public class AdminEmployeeServiceImpl implements AdminEmployeeService {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         QEmployee qEmployee = QEmployee.employee;
         String keyword = requestDto.getKeyword();
-        String hireDate = requestDto.getHireDate();
         BooleanExpression booleanExpression = qEmployee.empNum.gt(0L);
         booleanBuilder.and(booleanExpression);
         if(type == null || type.trim().length() == 0) {
@@ -125,14 +154,6 @@ public class AdminEmployeeServiceImpl implements AdminEmployeeService {
             }
             if(type.contains("empName")){
                 searchBuilder.or(qEmployee.empName.contains(keyword));
-            }if(type.contains("empHireDate")){
-                String empHireDate = hireDate.trim();
-                if (!empHireDate.isEmpty()) {
-                    LocalDate date = LocalDate.parse(empHireDate);
-                    LocalDateTime startOfDay = date.atStartOfDay();
-                    LocalDateTime endOfDay = date.atStartOfDay().plusDays(1).minusNanos(1);
-                    searchBuilder.or(qEmployee.empHireDate.between(startOfDay, endOfDay));
-                }
             }
             booleanBuilder.and(searchBuilder);
         }

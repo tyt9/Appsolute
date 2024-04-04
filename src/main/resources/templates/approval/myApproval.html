@@ -1,41 +1,137 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/basic.html}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+
+        /*.container {*/
+        /*    background-color: ghostwhite;*/
+        /*    border-radius: 5px;*/
+        /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    padding: 20px;*/
+        /*}*/
+
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .mail-links a {
+            padding: 10px 30px;
+            text-decoration: none;
+        }
+
+
+        .approval-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .approval-table th, .approval-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Style table header */
+        /*.mail-table th {*/
+        /*    background-color: #ffffff;*/
+        /*}*/
+
+        /*!* Style alternating rows *!*/
+        /*.mail-table tr:nth-child(even) {*/
+        /*    background-color: #ffffff;*/
+        /*}*/
+
+
+        /* Center align the "게시글이 없습니다." row */
+        .no-articles {
+            text-align: center;
+        }
+
+
+        .pagination li {
+            margin: 5px;
+        }
+
+        .approval-table tbody tr:hover {
+            background-color: #ececec; /* 원하는 배경색 지정 */
+        }
+
+        .move {
+            margin-left: 320px;
+        }
+
+        input[type="checkbox"].chBox {
+            width: 15px;
+            height: 15px;
+        }
+
+        input[type="checkbox"][name="allcheck"] {
+            width: 15px;
+            height: 15px;
+        }
+
+    </style>
 </head>
 <body>
-<h2>내가 올린 결재함</h2>
-<div style="display: flex;">
-    <div style="margin-right: 100px;">
-        <h3>미결</h3>
-        <th:block th:each="myApproval : ${myApproval}">
-            <div th:if="${myApproval.appCheck == 0}">
-                <a th:href="@{'/approval/' + ${myApproval.approvalNum}}">
-                    <p th:text="${myApproval.appTitle}"></p>
-                </a>
-            </div>
+<div layout:fragment="content">
+    <div class="container" style="margin-top: 50px;">
+    <h1 class="centered-text" style="font-weight: bold">내가 올린 결재함</h1>
+    <hr>
+
+    <h3>미결</h3>
+    <table border="1">
+        <tr>
+            <td>문서 제목</td>
+        </tr>
+        <th:block th:each="myApproval : ${myApproval}" th:if="${myApproval.appCheck == 0}">
+            <tr>
+                <td >
+                    <a th:href="@{'/approval/' + ${myApproval.approvalNum}}">
+                        [[${myApproval.appTitle}]]
+                    </a>
+                </td>
+            </tr>
         </th:block>
-    </div>
-    <div style="margin-right: 100px;">
-        <h3>결재완료</h3>
-        <th:block th:each="myApproval : ${myApproval}">
-            <div th:if="${myApproval.appCheck == 1}">
-                <a th:href="@{'/approval/' + ${myApproval.approvalNum}}">
-                    <p th:text="${myApproval.appTitle}"></p>
-                </a>
-            </div>
+    </table>
+    <br>
+    <h3>결재완료</h3>
+    <table border="1">
+        <tr>
+            <td>문서 제목</td>
+        </tr>
+        <th:block th:each="myApproval : ${myApproval}" th:if="${myApproval.appCheck == 1}">
+            <tr>
+                <td >
+                    <a th:href="@{'/approval/' + ${myApproval.approvalNum}}">
+                        [[${myApproval.appTitle}]]
+                    </a>
+                </td>
+            </tr>
         </th:block>
-    </div>
-    <div style="margin-right: 100px;">
-        <h3>반려</h3>
-        <th:block th:each="myApproval : ${myApproval}">
-            <div th:if="${myApproval.appCheck == 2}">
-                <a th:href="@{'/approval/' + ${myApproval.approvalNum}}">
-                    <p th:text="${myApproval.appTitle}"></p>
-                </a>
-            </div>
+    </table>
+    <br>
+    <h3>반려</h3>
+    <table border="1">
+        <tr>
+            <td>문서 제목</td>
+        </tr>
+        <th:block th:each="myApproval : ${myApproval}" th:if="${myApproval.appCheck == 2}">
+            <tr>
+                <td>
+                    <a th:href="@{'/approval/' + ${myApproval.approvalNum}}">
+                        [[${myApproval.appTitle}]]
+                    </a>
+                </td>
+            </tr>
         </th:block>
+    </table>
     </div>
 </div>
 </body>

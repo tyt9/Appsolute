@@ -38,6 +38,8 @@ public class Board extends BaseTimeEntity {
     @OrderBy("id asc")
     private List<BoardComment> boardCommentList = new ArrayList<>();
 
+
+
     public void setMember(Employee employee) {
         this.employee = employee;
         employee.getBoardList().add(this);

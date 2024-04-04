@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,7 @@ public class BoardService {
 
     @Transactional
     public BoardDto getBoard(Long id){
+
         Optional<Board> boardWrapper = boardRepository.findById(id);
         if(boardWrapper.isPresent())
         {
@@ -54,6 +56,8 @@ public class BoardService {
         return null;
     }
 
+
+
     @Transactional
     public void update(BoardDto dto) {
         Board board = boardRepository.findById(dto.getId()).orElseThrow(() ->
@@ -65,6 +69,8 @@ public class BoardService {
     public List<Board> findAll() {
         return boardRepository.findAll();
     }
+
+
 
     @Transactional
     public Page<Board> getBoardList(Pageable pageable) {
@@ -78,13 +84,13 @@ public class BoardService {
 
     }
 
-    @Transactional
-    public void updateVisit(Long id, BoardDto boardDto) {
-        Board board = boardRepository.findById(id).orElseThrow((() ->
-                new IllegalStateException("해당 게시글이 존재하지 않습니다.")));
-
-        board.updateVisit(boardDto.getCountVisit());
-    }
+//    @Transactional
+//    public void updateVisit(Long id, BoardDto boardDto) {
+//        Board board = boardRepository.findById(id).orElseThrow((() ->
+//                new IllegalStateException("해당 게시글이 존재하지 않습니다.")));
+//
+//        board.updateVisit(boardDto.getCountVisit());
+//    }
 
     public Board findById(Long id){
         Board board = boardRepository.findById(id).get();

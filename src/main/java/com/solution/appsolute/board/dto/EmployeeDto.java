@@ -26,7 +26,7 @@ public class EmployeeDto {
 
     private Long deptNo;
     private String empPhone;
-    private LocalDateTime empHireDate;
+    private LocalDate empHireDate;
     private String empPosition;
     private int empLeader;
     private int empMgr;
@@ -37,7 +37,7 @@ public class EmployeeDto {
     private String empEmail;
 
     @Builder
-    public EmployeeDto(String empName, Long deptNo, String empPhone, LocalDateTime empHireDate, String empPosition, int empLeader, int empMgr, String empPassword, String empEmail) {
+    public EmployeeDto(String empName, Long deptNo, String empPhone, LocalDate empHireDate, String empPosition, int empLeader, int empMgr, String empPassword, String empEmail) {
         this.empName = empName;
         this.deptNo = deptNo;
         this.empPhone = empPhone;

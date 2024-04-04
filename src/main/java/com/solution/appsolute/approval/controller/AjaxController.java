@@ -69,4 +69,11 @@ public class AjaxController {
         approvalDao.addPurchaseDetail(purchaseArray.get(1));
         return 0;
     }
+
+    @RequestMapping(value = "/addGeneral", method = RequestMethod.POST)
+    public int addGeneral(@RequestBody String content, @RequestBody int insertedKey) {
+        System.out.println(content);
+        System.out.println(insertedKey);
+        return 0;
+    }
 }

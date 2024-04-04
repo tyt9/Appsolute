@@ -151,5 +151,11 @@
         update approval set app_check = #{param1} where approval_num = #{param2}
     </update>
 
-
+<!--    <insert id="addGeneral" parameterType="String">-->
+<!--        insert into approval_content_detail values-->
+<!--            (null, #{approvalNum}, #{documentNum}, #{documentNum}, #{documentNum})-->
+<!--    </insert>-->
+    <select id="prevDetail" resultMap="approvalDetailResultMap" parameterType="int">
+        select * from approval_detail where approval_detail_num = #{param}
+    </select>
 </mapper>
