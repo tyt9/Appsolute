@@ -42,20 +42,23 @@
 
   <details><summary><b>받은 결재함</b></summary>
   <div>
-    <img src="src/main/webapp/img/스크린샷 2024-06-10 181246.png">
+    <img src="src/main/resources/static/image/스크린샷 2024-07-08 173557.png">
   </div>
 </details>
   
-     * 
+     * 받은 결재함에는 내가 받은 문서들이 미결/승인/반려 로 분류되어 나옴
+     * 미결함에 있는 문서를 클릭해 승인 또는 반려를 하면 문서가 승인함 또는 반려함 으로 분류됨
+     * 결재 절차에 따라 이전사람이 승인하지 않으면 다음번 사람에게 보이지 않음
+     * 마지막 사람이 결재를 완료하면 최종적으로 승인 또는 반려로 표시
 
   <details><summary><b>내가 올린 결재</b></summary>
   <div>
-    <img src="src/main/webapp/img/스크린샷 2024-06-10 181545.png">
-    <img src="src/main/webapp/img/스크린샷 2024-06-10 184327.png">
+    <img src="src/main/resources/static/image/스크린샷 2024-07-08 175259.png">
   </div>
 </details>
 
-     * 
+     * 받은 결재함과 동일하게 내가 올린 문서들이 미결/승인/반려로 분류되어 나옴
+     * 여기서는 최종 승인 또는 반려되어야 승인 또는 반려함으로 분류됨
 
 
 
